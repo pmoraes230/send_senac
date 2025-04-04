@@ -1,0 +1,14 @@
+img {
+    height: 40px;
+    width: auto;
+}
+
+.container {
+    display: flex;
+}
+
+.container_acessibidades {
+    display: flex;
+    margin: 1rem 2rem;
+}
+
