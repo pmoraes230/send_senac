@@ -1,7 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
-* {
-    font-family: "Roboto", sans-serif;
+body {
+    font-family: "Quicksand", sans-serif;
+}
+
+a {
+    color: #257ed6;
+    text-decoration: none;
 }
 
 body {
@@ -208,4 +213,117 @@ img {
     margin-right: 86%;
     font-size: 30px;
     font-weight: 500;
+}
+
+.nav-home {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #E6E6E6;
+    padding: 10px 0;
+}
+
+.nav_send_main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 10px;
+    list-style: none;
+}
+
+.nav-item {
+    padding: .75rem;
+    font-weight: 500;
+}
+
+.desabled {
+    color: #868e96;
+}
+
+.card {
+    background-color: #ffffffc7;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    margin: 0 auto 1rem;
+    padding: 1rem .80rem 2rem;
+}
+
+.bg-white {
+    background-color: #FFF;
+}
+
+.w-100 {
+    width: 99%;
+}
+
+.border_header_card {
+    border-bottom: 1px solid #ccc;
+}
+
+.card-header {
+    padding: 1.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, 0.03);
+    display: flex;
+    width: 97%;
+}
+
+.icon_plus {
+    margin-right: 5px;
+    height: 15px;
+    width: auto;
+}
+
+.card h4 {
+    color: #257ed6;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.deteils_card_body {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 10px;
+}
+
+.margin-0 {
+    margin: 0 auto;
+    padding: 1rem .80rem;
+}
+
+.deteils_card_body h2 {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.table {
+    width: 96%;
+    max-width: 100%;
+    border-bottom: 2px solid #dee2e6;
+    margin: auto;
+}
+
+.table thead th {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.table thead th {
+    vertical-align: bottom;
+}
+
+.table th, .table td {
+    padding: .75rem;
+    vertical-align: top;
 }
