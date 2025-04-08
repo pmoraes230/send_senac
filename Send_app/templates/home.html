@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -8,7 +10,7 @@
         integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" href="https://www.pa.senac.br/send4/resources/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="./src/style/tela_inicial.css">
+    <link rel="stylesheet" href="{% static 'style/home.css' %}">
     <title>Send</title>
 </head>
 
@@ -30,13 +32,13 @@
         <div class="conteiner_icons navbar-nav">
             <a href="#" class="helpdesk">Helpdesk</a>
             <div class="icons_header">
-                <img src="./src/img/star-sharp-svgrepo-com.svg" alt="icon_star" class="icons">
-                <img src="./src/img/bell-svgrepo-com.svg" alt="icon_bell">
-                <img src="./src/img/time-history-solid-svgrepo-com (2).svg" alt="icon_time">
+                <img src="{% static 'icons/star_blue.svg' %}" alt="icon_star" class="icons">
+                <img src="{% static 'icons/bell.svg' %}" alt="icon_bell">
+                <img src="{% static 'icons/time.svg' %}" alt="icon_time">
             </div>
 
             <div class="user_camp">
-                <img src="./src/img/user-svgrepo-com.svg" alt="icon_user" class="icon_user">
+                <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user">
                 <p class="name_user">ChatGpt Nascimento</p>
             </div>
         </div>
@@ -70,7 +72,7 @@
 
             <div class="page-header">
                 <h1 class="page-header-title">
-                    <img src="./src/img/star-sharp-svgrepo-com (1).svg " alt="">
+                    <img src="{% static 'icons/star.svg' %}" alt="">
                     SEND
                 </h1>
             </div>
@@ -90,21 +92,21 @@
 
             <div class="card">
                 <div class="card-header">
-                    <img src="./src/img/plus-square-svgrepo-com (2).svg" alt="icon-plus" class="icon_plus">
+                    <img src="{% static 'icons/plus.svg' %}" alt="icon-plus" class="icon_plus">
                     <h4>Solicitação de viagem</h4>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <img src="./src/img/plus-square-svgrepo-com (2).svg" alt="icon-plus" class="icon_plus">
+                    <img src="{% static 'icons/plus.svg' %}" alt="icon-plus" class="icon_plus">
                     <h4>Processos - pendentes</h4>
                 </div>
             </div>
 
             <div class="card bg-white">
                 <div class="card-header">
-                    <img src="./src/img/minus-square-svgrepo-com.svg" alt="icon-plus" class="icon_plus">
+                    <img src="{% static 'icons/minus.svg' %}" alt="icon-plus" class="icon_plus">
                     <h4>Processos - pendentes</h4>
                 </div>
                 <div class="card-body">
