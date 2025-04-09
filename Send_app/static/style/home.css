@@ -327,3 +327,107 @@ img {
     padding: .75rem;
     vertical-align: top;
 }
+
+.site_footer {
+    border-top: 1px solid #ddd;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    margin-top: 40px;
+}
+
+.container_footer {
+    max-width: none;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container_footer_footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.mr-p {
+    margin: 8px;
+}
+
+.mr-2 {
+    margin-right: .5rem;
+    font-weight: 500;
+}
+
+.custom-control-inline {
+    display: inline-flex;
+    margin-right: 1rem;
+}
+
+.custom-control-label::after {
+    position: absolute;
+    top: .25rem;
+    left: 0;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+}
+
+input[type="checkbox"],input[type="radio"]{
+    width: auto;
+    height: 15px;
+}
+
+/* dropdown */
+
+/* Estilo do cabeçalho */
+.card-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Estilo do ícone */
+.icon_plus {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    transition: transform 0.3s ease; /* Animação para o ícone */
+}
+
+/* Estilo do título */
+.card-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Estilo do conteúdo do dropdown */
+.card-content {
+    max-height: 0; /* Começa escondido */
+    overflow: hidden;
+    padding: 0 10px;
+    transition: max-height 0.3s ease, padding 0.3s ease; /* Animação suave */
+    background-color: #fff;
+}
+
+/* Classe para quando o dropdown está aberto */
+.card-content.open {
+    max-width: 1725px;
+    padding: 25px 0rem;
+}
+
+/* Rotação do ícone quando o dropdown está aberto (opcional) */
+.card-header.active .icon_plus {
+    transform: rotate(45deg); /* Rotaciona o ícone para parecer um "X" ou "minus" */
+}

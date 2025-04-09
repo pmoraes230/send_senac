@@ -4,41 +4,42 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
         integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="https://www.pa.senac.br/send4/resources/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'style/home.css' %}">
+    <link rel="shortcut icon" href="https://www.pa.senac.br/send4/resources/img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'style/home.css' %}" />
     <title>Send</title>
 </head>
 
 <body>
     <header class="container_header navbar">
         <div class="container_acessibidades mx-3">
-            <div class="img_send ml-3"><img src="https://www.pa.senac.br/send4/resources/img/send-large.png"
-                    alt="logo_send">
+            <div class="img_send ml-3">
+                <a href="{% url "home" %}"><img src="https://www.pa.senac.br/send4/resources/img/send-large.png" alt="logo_send" /></a>
             </div>
             <div class="btn_acessibilidades">
-                <a href="#" class="btn_acesso  ml-3">Acessar</a>
-                <input type="text" placeholder="Acesso rápido" class="ml-3 form-control">
+                <a href="#" class="btn_acesso ml-3">Acessar</a>
+                <input type="text" placeholder="Acesso rápido" class="ml-3 form-control" />
             </div>
         </div>
 
-        <figure class="img-fluid center-block ml-auto logo-senac"><img
-                src="https://www.pa.senac.br/send4/resources/img/senac/logo_regional.png" alt="logo senac"></figure>
+        <figure class="img-fluid center-block ml-auto logo-senac">
+            <img src="https://www.pa.senac.br/send4/resources/img/senac/logo_regional.png" alt="logo senac" />
+        </figure>
 
         <div class="conteiner_icons navbar-nav">
-            <a href="#" class="helpdesk">Helpdesk</a>
+            <a href="{% url "helpdesk" %}" class="helpdesk">Helpdesk</a>
             <div class="icons_header">
-                <img src="{% static 'icons/star_blue.svg' %}" alt="icon_star" class="icons">
-                <img src="{% static 'icons/bell.svg' %}" alt="icon_bell">
-                <img src="{% static 'icons/time.svg' %}" alt="icon_time">
+                <img src="{% static 'icons/star_blue.svg' %}" alt="icon_star" class="icons" />
+                <img src="{% static 'icons/bell.svg' %}" alt="icon_bell" />
+                <img src="{% static 'icons/time.svg' %}" alt="icon_time" />
             </div>
 
             <div class="user_camp">
-                <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user">
+                <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user" />
                 <p class="name_user">ChatGpt Nascimento</p>
             </div>
         </div>
@@ -53,8 +54,12 @@
             <div class="left_aside">
                 <nav class="breadcrumb">
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">SEND</a></li>
+                        <li>
+                            <a href="#">Home</a>
+                        </li>
+                        <li>
+                            <a href="#">SEND</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -72,7 +77,7 @@
 
             <div class="page-header">
                 <h1 class="page-header-title">
-                    <img src="{% static 'icons/star.svg' %}" alt="">
+                    <img src="{% static 'icons/star.svg' %}" alt="" />
                     SEND
                 </h1>
             </div>
@@ -81,57 +86,101 @@
             <div class="nav-home">
                 <div class="nav-home-content">
                     <ul class="nav nav_send_main">
-                        <li><a class="nav-item desabled" href="#">Navegue entre os painéis</a></li>
-                        <li><a class="nav-item" href="#">Solicitação de viagem</a></li>
-                        <li><a class="nav-item" href="#">Processos</a></li>
-                        <li><a class="nav-item" href="#">Helpdesk</a></li>
-                        <li><a class="nav-item" href="#">Contratos</a></li>
+                        <li>
+                            <a class="nav-item desabled" href="#">Navegue entre os painéis</a>
+                        </li>
+                        <li>
+                            <a class="nav-item" href="#">Solicitação de viagem</a>
+                        </li>
+                        <li>
+                            <a class="nav-item" href="#">Processos</a>
+                        </li>
+                        <li>
+                            <a class="nav-item" href="#">Helpdesk</a>
+                        </li>
+                        <li>
+                            <a class="nav-item" href="#">Contratos</a>
+                        </li>
                     </ul>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <img src="{% static 'icons/plus.svg' %}" alt="icon-plus" class="icon_plus">
+                    <img src="{% static 'icons/plus.svg' %}" alt="icon-plus" class="icon_plus" />
                     <h4>Solicitação de viagem</h4>
+                </div>
+                <div class="card-content">
+                    <p>Conteúdo da solicitação de viagem aqui. Pode adicionar formulários, texto ou outros elementos.
+                    </p>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <img src="{% static 'icons/plus.svg' %}" alt="icon-plus" class="icon_plus">
+                    <img src="{% static 'icons/plus.svg' %}" alt="icon-plus" class="icon_plus" />
                     <h4>Processos - pendentes</h4>
+                </div>
+                <div class="card-content">
+                    <p>Conteúdo da solicitação de viagem aqui. Pode adicionar formulários, texto ou outros elementos.
+                    </p>
                 </div>
             </div>
-
+            
             <div class="card bg-white">
                 <div class="card-header">
-                    <img src="{% static 'icons/minus.svg' %}" alt="icon-plus" class="icon_plus">
+                    <img src="{% static 'icons/minus.svg' %}" alt="icon-plus" class="icon_plus" />
                     <h4>Processos - pendentes</h4>
                 </div>
-                <div class="card-body">
-                    <div class="card bg-white w-100 margin-0">
-                        <div class="card-header border_header_card deteils_card_body">
-                            <h2><a href="#">Lista de Pendentes</a></h2>
-                            <a href="#" class="small">Consulta de chamados</a>
+                
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="card bg-white w-100 margin-0">
+                            <div class="card-header border_header_card deteils_card_body">
+                                <h2><a href="#">Lista de Pendentes</a></h2>
+                                <a href="#" class="small">Consulta de chamados</a>
+                            </div>
                         </div>
-                    </div>
 
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th class="table-cell">Categoria/Sub</th>
-                                <th class="table-cell">Usuário</th>
-                                <th class="table-cell">Responsável</th>
-                                <th class="table-cell">Solicitação</th>
-                            </tr>
-                        </thead>
-                    </table>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="table-cell">Categoria/Sub</th>
+                                    <th class="table-cell">Usuário</th>
+                                    <th class="table-cell">Responsável</th>
+                                    <th class="table-cell">Solicitação</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
+
+    <footer class="site_footer">
+        <div class="container_footer">
+            <span class="mr-2">Escolha sua preferência de trabalho:</span>
+            <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="check-night-mode">
+                <label class="custom-control-label" for="check-night-mode">Modo noturno</label>
+            </div>
+            <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input active" id="check-full-width">
+                <label class="custom-control-label" for="check-full-width">Largura total</label>
+            </div>
+        </div>
+
+        <div class="container_footer_footer">
+            <p class="mr-p">2025 © Sistema Eletrônico de Documentação. v4.1. Desenvolvido por Senac Pará</p>
+            <a href="#" class="link-tooltip">Documentos - PSI e PDTI </a>
+            <p class="mr-p">Conheça a <a href="#">Política de Privacidade </a>do Senac Pará</p>
+            <a href="#" class="ver-novidades-send">Veja as mudanças no SEND 4</a>
+        </div>
+    </footer>
+
+    <script src="{% static 'scripts/drop_home.js' %}"></script>
 </body>
 
 </html>

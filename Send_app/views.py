@@ -6,3 +6,6 @@ def login(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def helpdesk(request):
+    return render(request, 'helpdesk.html')

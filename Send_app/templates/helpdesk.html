@@ -1,0 +1,171 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+        integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="https://www.pa.senac.br/send4/resources/img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'style/home.css' %}" />
+    <link rel="stylesheet" href="{% static 'style/helpdesk.css' %}">
+    <title>Abrir chamado</title>
+</head>
+
+<body>
+    <header class="container_header navbar">
+        <div class="container_acessibidades mx-3">
+            <div class="img_send ml-3">
+                <a href="{% url "home" %}"><img src="https://www.pa.senac.br/send4/resources/img/send-large.png"
+                        alt="logo_send" /></a>
+            </div>
+            <div class="btn_acessibilidades">
+                <a href="#" class="btn_acesso ml-3">Acessar</a>
+                <input type="text" placeholder="Acesso rápido" class="ml-3 form-control" />
+            </div>
+        </div>
+
+        <figure class="img-fluid center-block ml-auto logo-senac">
+            <img src="https://www.pa.senac.br/send4/resources/img/senac/logo_regional.png" alt="logo senac" />
+        </figure>
+
+        <div class="conteiner_icons navbar-nav">
+            <a href="{% url "helpdesk" %}" class="helpdesk">Helpdesk</a>
+            <div class="icons_header">
+                <img src="{% static 'icons/star_blue.svg' %}" alt="icon_star" class="icons" />
+                <img src="{% static 'icons/bell.svg' %}" alt="icon_bell" />
+                <img src="{% static 'icons/time.svg' %}" alt="icon_time" />
+            </div>
+
+            <div class="user_camp">
+                <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user" />
+                <p class="name_user">ChatGpt Nascimento</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar menu-primario">
+        <div class="container">
+            <span class="navbar-brand">Helpdesk</span>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a href="#" class="nav-link">Chamados</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Abrir chamados</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="conteiner page-content">
+        <aside class="section_aside">
+            <div class="left_aside">
+                <nav class="breadcrumb">
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Helpdesk</a></li>
+                        <li><a href="#">Chamados</a></li>
+                        <li><a href="#">Abrir chamado</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="right_aside">
+                <div class="meta_header">
+                    <span class="time"></span>
+                    <span class="date">Segunda, 07 de abril de 2025</span>
+                    <span class="btn-font">
+                        <a href="#" class="increaseFont">A+</a>
+                        <a href="#" class="resetFont">A</a>
+                        <a href="#" class="decreaseFont">A-</a>
+                    </span>
+                </div>
+            </div>
+
+        </aside>
+        <div class="page-header">
+            <h1 class="page-header-title">
+                <img src="{% static 'icons/star.svg' %}" alt="" />
+                Abrir Chamados
+            </h1>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_usuario" class="subtitle">USUÁRIO:</label>
+                            <select name="id_usuario" id="id_usuario"
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="selecione">Selecione</option>
+                                <optgroup class="optUser" label="Cep Papaléo / Apoio">
+                                    <option value="919" selected="selected">ChatGpt Nascimento</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_usuario" class="subtitle">SETOR RESPONSÁVEL:</label>
+                            <select name="id_usuario" id="id_usuario"
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="selecione">Selecione</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_usuario" class="subtitle">CATEGORIA:</label>
+                            <select name="id_usuario" id="id_usuario"
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="selecione">Selecione</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_usuario" class="subtitle">SUB-CATEGORIA:</label>
+                            <select name="id_usuario" id="id_usuario"
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="selecione" class="options">Selecione</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="patrimonio" class="subtitle patrimonio">patrimonio:</label>
+                    <input type="text" name="patrimonio" size="11" id="patrimonio" class="digits form-control">
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="site_footer">
+            <div class="container_footer">
+                <span class="mr-2">Escolha sua preferência de trabalho:</span>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" id="check-night-mode">
+                    <label class="custom-control-label" for="check-night-mode">Modo noturno</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input active" id="check-full-width">
+                    <label class="custom-control-label" for="check-full-width">Largura total</label>
+                </div>
+            </div>
+
+            <div class="container_footer_footer">
+                <p class="mr-p">2025 © Sistema Eletrônico de Documentação. v4.1. Desenvolvido por Senac Pará</p>
+                <a href="#" class="link-tooltip">Documentos - PSI e PDTI </a>
+                <p class="mr-p">Conheça a <a href="#">Política de Privacidade </a>do Senac Pará</p>
+                <a href="#" class="ver-novidades-send">Veja as mudanças no SEND 4</a>
+            </div>
+        </footer>
+</body>
+
+</html>
