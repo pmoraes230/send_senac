@@ -42,7 +42,9 @@
 
             <div class="user_camp">
                 <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user" />
-                <p class="name_user">ChatGpt Nascimento</p>
+                {% for name in name_user %}
+                <p class="name_user">{{name.nome}}</p>
+                {% endfor %}
             </div>
         </div>
     </header>
@@ -74,7 +76,7 @@
             <div class="right_aside">
                 <div class="meta_header">
                     <span class="time"></span>
-                    <span class="date">Segunda, 07 de abril de 2025</span>
+                    <span class="date" id="date"></span>
                     <span class="btn-font">
                         <a href="#" class="increaseFont">A+</a>
                         <a href="#" class="resetFont">A</a>
@@ -96,12 +98,17 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="id_usuario" class="subtitle">USUÁRIO:</label>
+
                             <select name="id_usuario" id="id_usuario"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
-                                aria-hidden="true">
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
+
                                 <option value="selecione">Selecione</option>
-                                <optgroup class="optUser" label="Cep Papaléo / Apoio">
-                                    <option value="919" selected="selected">ChatGpt Nascimento</option>
+                                {% for unit in units %}
+                                <optgroup class="optUser" label="{{unit.nome}}">
+                                    {% endfor %}
+                                    {% for name in name_user %}
+                                    <option value="919" selected="selected">{{name.nome}}</option>
+                                    {% endfor %}
                                 </optgroup>
                             </select>
                         </div>
@@ -110,29 +117,32 @@
                         <div class="form-group">
                             <label for="id_usuario" class="subtitle">SETOR RESPONSÁVEL:</label>
                             <select name="id_usuario" id="id_usuario"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
-                                aria-hidden="true">
-                                <option value="selecione">Selecione</option>
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
+                                {% for sector in sectors %}
+                                <option value="selecione">{{sector.nome}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="id_usuario" class="subtitle">CATEGORIA:</label>
-                            <select name="id_usuario" id="id_usuario"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
-                                aria-hidden="true">
-                                <option value="selecione">Selecione</option>
+                            <label for="id_categoria" class="subtitle">CATEGORIA:</label>
+                            <select name="id_categoria" id="id_categoria"
+                                data-subcategories-url="{% url 'get_subcategories' %}"
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
+                                <option value="">Selecione uma categoria</option>
+                                {% for category in categories %}
+                                <option value="{{category.id}}">{{category.nome}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="id_usuario" class="subtitle">SUB-CATEGORIA:</label>
-                            <select name="id_usuario" id="id_usuario"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1"
-                                aria-hidden="true">
-                                <option value="selecione" class="options">Selecione</option>
+                            <label for="id_subcategoria" class="subtitle">SUB-CATEGORIA:</label>
+                            <select name="id_subcategoria" id="id_subcategoria"
+                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
+                                <option value="">Selecione uma subcategoria</option>
                             </select>
                         </div>
                     </div>
@@ -143,6 +153,52 @@
                     <input type="text" name="patrimonio" size="11" id="patrimonio" class="digits form-control">
                 </div>
             </div>
+
+            <div class="progress">
+                <div class="progress-bar progress-bar-success"></div>
+            </div>
+
+            <div>
+                <span class="btn btn-outline-secondary btn-sm fileinput-button"><span class="span_select">Selecionar
+                        arquivos</span>
+                    <input type="file" name="arquivo" class="fileupload" multiple="" data-local="helpdesk" data-url=""
+                        id="form-upload-031578">
+                </span>
+            </div>
+
+            <div class="text-center">
+                <p>Tamanho máximo:35MB</p>
+                <p>Formatos aceitos: jpg, png, jpeg, pdf, xls, xlsx, doc, docx, txt, eml, zip</p>
+            </div>
+
+            <div class="form-group">
+                <div class="alert alert-warning">
+                    <h2>DICAS PARA ABRIR SEU CHAMADO.</h2>
+                    <ol class="mb-2 mt-2">
+                        <li><span class="span_ol">Identifique o máximo possível</span> (nome, códigos, locaulzação;)
+                        </li>
+                        <li><span class="span_ol">Descreva o problema</span> com o precisão (o que acontece, há quanto
+                            tempo, tentativas de solução);</li>
+                        <li><span class="span_ol">Seja sincero, informe a urgência real</span> (informar urgência sem
+                            ser urgente impacta diretamente na operação e segurança);</li>
+                        <li><span class="span_ol">Anexe fotos ou vídeos</span> (o envio facilita a analise prévia);</li>
+                        <li><span class="span_ol">Acompanhe o seu chamado</span> e esteja disponível para informações.
+                        </li>
+                    </ol>
+
+                    <h2>Chamado Claro = solução rápida!</h2>
+                </div>
+
+                <div class="form-group">
+                    <h3 class="subtitle">DESCRIÇÃO</h3>
+
+                    <textarea name="descrition" id="description" class="description"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn_submit">
+            <button class="btn btn_sub" type="submit">Abrir chamados</button>
         </div>
 
 
@@ -166,6 +222,10 @@
                 <a href="#" class="ver-novidades-send">Veja as mudanças no SEND 4</a>
             </div>
         </footer>
+
+        <script src="{% static 'scripts/categories.js' %}"></script>
+        <script src="{% static 'scripts/date.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 
 </html>

@@ -40,7 +40,9 @@
 
             <div class="user_camp">
                 <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user" />
-                <p class="name_user">ChatGpt Nascimento</p>
+                {% for name in name_user %}
+                <p class="name_user">{{name.nome}}</p>
+                {% endfor %}
             </div>
         </div>
     </header>
@@ -66,7 +68,7 @@
             <div class="right_aside">
                 <div class="meta_header">
                     <span class="time"></span>
-                    <span class="date">Segunda, 07 de abril de 2025</span>
+                    <span class="date" id="date"></span>
                     <span class="btn-font">
                         <a href="#" class="increaseFont">A+</a>
                         <a href="#" class="resetFont">A</a>
@@ -152,6 +154,9 @@
                                     <th class="table-cell">Solicitação</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -181,6 +186,7 @@
     </footer>
 
     <script src="{% static 'scripts/drop_home.js' %}"></script>
+    <script src="{% static 'scripts/date.js' %}"></script>
 </body>
 
 </html>

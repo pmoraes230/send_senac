@@ -25,14 +25,16 @@
         </div>
 
         <div class="input_altenticator">
-            <form action="#" class="input_camps">
+            <form class="input_camps" method="POST">
+                {% csrf_token %}
                 <input type="text" name="user" id="user" placeholder="Usuário ou CPF">
                 <input type="password" name="password" id="password" placeholder="Senha">
-
-                <a class="login_btn" href="{% url "home" %}">entrar</a>
+                <button class="login_btn" type="submit">Entrar</button>
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
                 <div class="link_login">
                     <a href="#">Esqueceu a senha?</a>
-                    <a href="#">Ir para o Send antigo</a>
                 </div>
             </form>
 

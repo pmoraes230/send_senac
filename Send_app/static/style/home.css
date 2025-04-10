@@ -423,7 +423,7 @@ input[type="checkbox"],input[type="radio"]{
 
 /* Classe para quando o dropdown está aberto */
 .card-content.open {
-    max-width: 1725px;
+    max-height: 1665px;
     padding: 25px 0rem;
 }
 

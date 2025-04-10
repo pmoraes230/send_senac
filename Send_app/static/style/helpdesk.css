@@ -1,7 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
     font-family: "Quicksand", sans-serif;
+}
+
+ol {
+    list-style: auto;
+    padding-left: 26px;
 }
 
 .menu-primario {
@@ -94,7 +99,7 @@ body {
 
 .subtitle {
     text-transform: uppercase;
-    font-size: 76%;
+    font-size: 90%;
     color: #313131;
     font-weight: bold;
 }
@@ -131,4 +136,145 @@ body {
 
 .patrimonio {
     margin-left: -8px;
+}
+
+.progress {
+    display: flex;
+    height: 1rem;
+    overflow: hidden;
+    font-size: .75rem;
+    background-color: #e9ecef;
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+}
+
+btn:not([disabled]):not(.disabled) {
+    cursor: pointer;
+}
+
+[class^='btn-outline-'].btn-sm, [class*='btn-outline-'].btn-sm {
+    min-width: 32px;
+}
+
+.fileinput-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.btn-sm, .btn-group-sm>.btn {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+.btn-outline-secondary {
+    color: #868e96;
+    background-color: transparent;
+    background-image: none;
+    border-color: #868e96;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 1.375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    font-size: 200px !important;
+    direction: ltr;
+    cursor: pointer;
+}
+
+a, area, button, [role="button"], input:not([type="range"]), label, select, summary, textarea {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+
+.span_select {
+    border: 2px solid #868e96;
+    padding: 10px;
+    border-radius: 50px;
+}
+
+.span_select:hover {
+    background-color: #868e96;
+    color: #444;
+}
+
+.text-center {
+    text-align: center;
+    font-size: 85%;
+    font-weight: 400;
+    line-height: 1;
+    font-family: "Roboto Condensed", sans-serif;
+}
+
+.alert {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    margin: 1rem auto
+}
+
+.alert h2 {
+    font-weight: bold;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.mb-2 {
+    margin-bottom: .5rem;
+    margin-top: .5rem;
+}
+
+.span_ol {
+    font-weight: bold;
+}
+
+.description {
+    resize: none;
+    width: 99%;
+    height: 12vh;
+}
+
+.btn_submit {
+    display: flex;
+    justify-content: center;
+}
+
+.btn_sub {
+    background-color: #E6E6E6;
+    border: 5px solid #034ea3;
+    border-radius: 50px;
+    padding: 1rem 28px;
+    color: #034ea3;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn_sub:hover {
+    background-color: #034ea3;
+    color: #e9ecef;
 }

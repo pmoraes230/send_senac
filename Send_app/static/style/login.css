@@ -101,3 +101,7 @@ body {
     width: 100px;
     height: auto;
 }
+
+.error {
+    color: #007bff;
+}

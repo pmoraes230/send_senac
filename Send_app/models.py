@@ -13,6 +13,9 @@ class ChArquivo(models.Model):
         managed = False
         db_table = 'ch_arquivo'
 
+    def __str__(self):
+        return self.arquivo
+
 
 class ChAutorizacao(models.Model):
     ch_chamado = models.ForeignKey('ChChamado', models.DO_NOTHING)
@@ -24,6 +27,9 @@ class ChAutorizacao(models.Model):
     class Meta:
         managed = False
         db_table = 'ch_autorizacao'
+    
+    def __str__(self):
+        return self.usu_usuario
 
 
 class ChCategoria(models.Model):
@@ -39,6 +45,9 @@ class ChCategoria(models.Model):
     class Meta:
         managed = False
         db_table = 'ch_categoria'
+    
+    def __str__(self):
+        return self.nome
 
 
 class ChCategoriaDoChamado(models.Model):
@@ -72,6 +81,9 @@ class ChChamado(models.Model):
         managed = False
         db_table = 'ch_chamado'
 
+    def __str__(self):
+        return self.descricao
+
 
 class ChInteracao(models.Model):
     id_usuario = models.ForeignKey('UsuUsuario', models.DO_NOTHING, db_column='id_usuario')
@@ -95,6 +107,9 @@ class ChServicos(models.Model):
     class Meta:
         managed = False
         db_table = 'ch_servicos'
+    
+    def __str__(self):
+        return self.nome
 
 
 class ChServicosChamado(models.Model):
@@ -116,6 +131,9 @@ class ChStatus(models.Model):
     class Meta:
         managed = False
         db_table = 'ch_status'
+    
+    def __str__(self):
+        return self.nome
 
 
 class ChSubcategoria(models.Model):
@@ -132,6 +150,9 @@ class ChSubcategoria(models.Model):
     class Meta:
         managed = False
         db_table = 'ch_subcategoria'
+    
+    def __str__(self):
+        return self.nome
 
 
 class UsuGrupoUsuario(models.Model):
@@ -141,6 +162,9 @@ class UsuGrupoUsuario(models.Model):
     class Meta:
         managed = False
         db_table = 'usu_grupo_usuario'
+
+    def __str__(self):
+        return self.nome
 
 
 class UsuSetor(models.Model):
@@ -153,6 +177,9 @@ class UsuSetor(models.Model):
         managed = False
         db_table = 'usu_setor'
 
+    def __str__(self):
+        return self.nome
+
 
 class UsuUnidade(models.Model):
     nome = models.CharField(max_length=100, blank=True, null=True)
@@ -162,6 +189,9 @@ class UsuUnidade(models.Model):
     class Meta:
         managed = False
         db_table = 'usu_unidade'
+
+    def __str__(self):
+        return self.nome
 
 
 class UsuUsuario(models.Model):
@@ -181,3 +211,6 @@ class UsuUsuario(models.Model):
     class Meta:
         managed = False
         db_table = 'usu_usuario'
+
+    def __str__(self):
+        return self.nome
