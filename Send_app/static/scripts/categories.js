@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     const categoriaSelect = document.getElementById('id_categoria');
     const subcategoriaSelect = document.getElementById('id_subcategoria');
-    const subcategoriesUrl = categoriaSelect.dataset.subcategoriesUrl; // Pega a URL do atributo data
+    const subcategoriesUrl = categoriaSelect.dataset.subcategoriesUrl;
 
-    categoriaSelect.addEventListener('change', function() {
-        const categoryId = this.value;
-        
-        if (categoryId) {
+    function updateSubcategories(categoryId, targetSelect) {
+        if (categoryId && categoryId !== '') {
             fetch(subcategoriesUrl + "?category_id=" + categoryId)
                 .then(response => {
                     if (!response.ok) {
@@ -15,28 +13,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     return response.json();
                 })
                 .then(data => {
-                    subcategoriaSelect.innerHTML = '';
+                    targetSelect.innerHTML = '';
                     const defaultOption = document.createElement('option');
                     defaultOption.value = '';
                     defaultOption.text = 'Selecione uma subcategoria';
-                    subcategoriaSelect.appendChild(defaultOption);
+                    defaultOption.disabled = true;
+                    defaultOption.selected = true;
+                    targetSelect.appendChild(defaultOption);
 
                     data.forEach(subcategory => {
                         const option = document.createElement('option');
                         option.value = subcategory.id;
                         option.text = subcategory.nome;
-                        subcategoriaSelect.appendChild(option);
+                        targetSelect.appendChild(option);
                     });
+
+                    // Reaplica Select2, se presente
+                    if (typeof jQuery !== 'undefined' && jQuery.fn.select2) {
+                        jQuery(targetSelect).select2('destroy').select2();
+                    }
                 })
                 .catch(error => {
                     console.error('Erro ao carregar subcategorias:', error);
                 });
         } else {
-            subcategoriaSelect.innerHTML = '';
+            targetSelect.innerHTML = '';
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.text = 'Selecione uma subcategoria';
-            subcategoriaSelect.appendChild(defaultOption);
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            targetSelect.appendChild(defaultOption);
         }
+    }
+
+    categoriaSelect.addEventListener('change', function() {
+        updateSubcategories(this.value, subcategoriaSelect);
     });
 });

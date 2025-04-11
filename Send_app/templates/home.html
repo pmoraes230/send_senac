@@ -40,9 +40,15 @@
 
             <div class="user_camp">
                 <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user" />
-                {% for name in name_user %}
-                <p class="name_user">{{name.nome}}</p>
-                {% endfor %}
+                {% if user_name %}
+                    <p class="name_user">{{ user_name }}</p>
+                    <form action="{% url 'logout' %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn_logout">Logout</button>
+                    </form>
+                {% else %}
+                    <p class="name_user">Nenhum usuário logado</p>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -143,7 +149,7 @@
                                 <a href="#" class="small">Consulta de chamados</a>
                             </div>
                         </div>
-
+                        
                         <table class="table">
                             <thead>
                                 <tr>
@@ -155,7 +161,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                {% for chamado in chamados_abertos %}
+                                    <tr>
+                                        <td>{{ chamado.id }}</td>
+                                        <td>
+                                            <ul class="category-list">
+                                                {% for cat in chamado.chcategoriadochamado_set.all %}
+                                                    <li>{{ cat.id_categoria.nome }} / {{ cat.id_subcategoria.nome }}</li>
+                                                {% empty %}
+                                                    <li>Sem categoria/subcategoria</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        <td>{{ chamado.id_usuario.nome }}</td>
+                                        <td>
+                                            {% if chamado.id_usuario_suporte %}
+                                                {{ chamado.id_usuario_suporte.nome }}
+                                            {% else %}
+                                                Não atribuído
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ chamado.descricao|truncatewords:10 }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5">Nenhum chamado em aberto encontrado.</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>

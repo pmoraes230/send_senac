@@ -306,26 +306,41 @@ img {
     font-weight: bold;
 }
 
+/* Estilo para a tabela */
 .table {
     width: 96%;
     max-width: 100%;
     border-bottom: 2px solid #dee2e6;
     margin: auto;
+    border-collapse: collapse;
 }
 
 .table thead th {
     text-transform: uppercase;
     font-size: 11px;
     font-weight: normal;
-}
-
-.table thead th {
-    vertical-align: bottom;
+    text-align: left; /* Alinha o cabeçalho à esquerda */
+    padding: 0.75rem;
 }
 
 .table th, .table td {
-    padding: .75rem;
+    padding: 0.75rem;
     vertical-align: top;
+    text-align: left; /* Alinha o conteúdo das células à esquerda */
+    border-top: 1px solid #dee2e6;
+}
+
+/* Estilo para a lista de categorias/subcategorias */
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-list li {
+    margin-bottom: 5px; /* Espaçamento entre os itens */
+    font-size: 14px;
+    color: #333;
 }
 
 .site_footer {
@@ -430,4 +445,24 @@ input[type="checkbox"],input[type="radio"]{
 /* Rotação do ícone quando o dropdown está aberto (opcional) */
 .card-header.active .icon_plus {
     transform: rotate(45deg); /* Rotaciona o ícone para parecer um "X" ou "minus" */
+}
+
+.user_options {
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.btn_logout {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn_logout:hover {
+    background-color: #d32f2f;
 }

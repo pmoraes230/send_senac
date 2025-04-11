@@ -97,6 +97,9 @@ class ChInteracao(models.Model):
         managed = False
         db_table = 'ch_interacao'
 
+    def __str__(self):
+        return self.descricao
+
 
 class ChServicos(models.Model):
     id_subcategoria = models.ForeignKey('ChSubcategoria', models.DO_NOTHING, db_column='id_subcategoria')
@@ -110,8 +113,8 @@ class ChServicos(models.Model):
     
     def __str__(self):
         return self.nome
-
-
+    
+    
 class ChServicosChamado(models.Model):
     pk = models.CompositePrimaryKey('id_servicos', 'id_chamado')
     id_servicos = models.ForeignKey(ChServicos, models.DO_NOTHING, db_column='id_servicos')
@@ -205,7 +208,7 @@ class UsuUsuario(models.Model):
     email = models.CharField(max_length=100, blank=True, null=True)
     email_institucional = models.CharField(max_length=100, blank=True, null=True)
     ativo = models.IntegerField(blank=True, null=True)
-    deletado = models.IntegerField(blank=True, null=True)
+    deletado = models.BooleanField()
     data_cadastro = models.DateTimeField(blank=True, null=True)
 
     class Meta:

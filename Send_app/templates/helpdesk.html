@@ -42,9 +42,15 @@
 
             <div class="user_camp">
                 <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user" />
-                {% for name in name_user %}
-                <p class="name_user">{{name.nome}}</p>
-                {% endfor %}
+                {% if is_authenticated %}
+                <p class="name_user">{{ user_name|default:"Usuário" }}</p>
+                <form action="{% url 'logout' %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                </form>
+                {% else %}
+                <p class="name_user">Nenhum usuário logado</p>
+                <a href="{% url 'login' %}">Fazer login</a>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -66,7 +72,7 @@
             <div class="left_aside">
                 <nav class="breadcrumb">
                     <ul>
-                        <li><a href="#">Home</a></li>
+                        <li><a href="{% url "home" %}">Home</a></li>
                         <li><a href="#">Helpdesk</a></li>
                         <li><a href="#">Chamados</a></li>
                         <li><a href="#">Abrir chamado</a></li>
@@ -94,138 +100,154 @@
         </div>
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="id_usuario" class="subtitle">USUÁRIO:</label>
+                <!-- Descomentar e corrigir o form -->
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="id_usuario" class="subtitle">USUÁRIO:</label>
+                                        <select name="id_usuario" id="id_usuario"
+                                            class="required form-control-select2-hidden-accessible select2-container"
+                                            required>
+                                            <option value="" disabled >Selecione um usuário</option>
+                                            {% for unit in units %}
+                                            <optgroup class="optUser" label="{{unit.nome}}">
+                                                {% for name in name_user %}
+                                                {% if name.id_unidade_id == unit.id %}
+                                                <option selected value="{{name.id}}">{{name.nome}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </optgroup>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="id_setor" class="subtitle">SETOR RESPONSÁVEL:</label>
+                                        <select name="id_setor" id="id_setor"
+                                            class="required form-control-select2-hidden-accessible select2-container"
+                                            required>
+                                            <option value="" disabled>Selecione um setor</option>
+                                            {% for sector in sectors %}
+                                            <option selected value="{{sector.id}}">{{sector.nome}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="dynamic-container" class="row width-100">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_categoria" class="subtitle">CATEGORIA:</label>
+                                            <select name="id_categoria" id="id_categoria"
+                                                data-subcategories-url="{% url 'get_subcategories' %}"
+                                                class="required form-control-select2-hidden-accessible select2-container"
+                                                required>
+                                                <option value="" disabled selected>Selecione uma categoria</option>
+                                                {% for category in categories %}
+                                                <option value="{{category.id}}">{{category.nome}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_subcategoria" class="subtitle">SUB-CATEGORIA:</label>
+                                            <select name="id_subcategoria" id="id_subcategoria"
+                                                class="required form-control-select2-hidden-accessible select2-container"
+                                                required>
+                                                <option value="" disabled selected>Selecione uma subcategoria</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Botão Adicionar Mais -->
+                            <div class="col-md-12 btn-add-container">
+                                <button id="add-more" class="btn btn-primary btn_add" type="button">Adicionar
+                                    Mais</button>
+                                <button id="remove-column" class="btn btn-primary btn_remove" type="button">Retirar
+                                    coluna</button>
+                            </div>
 
-                            <select name="id_usuario" id="id_usuario"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
+                            <div class="form-group">
+                                <label for="patrimonio" class="subtitle patrimonio">PATRIMÔNIO:</label>
+                                <input type="text" name="patrimonio" size="11" id="patrimonio"
+                                    class="digits form-control">
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div>
+                                <span class="fileinput-button">
+                                    <span class="span_select">Selecionar arquivos</span>
+                                    <input type="file" name="arquivo" class="fileupload" multiple
+                                        id="form-upload-031578"
+                                        accept=".jpg,.jpeg,.png,.pdf,.xls,.xlsx,.doc,.docx,.txt,.eml,.zip">
+                                </span>
+                            </div>
+                            <div id="message"></div>
+                            <div class="text-center">
+                                <p>Tamanho máximo: 35MB</p>
+                                <p>Formatos aceitos: jpg, png, jpeg, pdf, xls, xlsx, doc, docx, txt, eml, zip</p>
+                            </div>
+                            <div class="form-group">
+                                <div class="alert alert-warning">
+                                    <h2>DICAS PARA ABRIR SEU CHAMADO.</h2>
+                                    <ol class="mb-2 mt-2">
+                                        <li><span class="span_ol">Identifique o máximo possível</span> (nome, códigos,
+                                            localização;)</li>
+                                        <li><span class="span_ol">Descreva o problema</span> com precisão (o que
+                                            acontece, há quanto tempo, tentativas de solução);</li>
+                                        <li><span class="span_ol">Seja sincero, informe a urgência real</span> (informar
+                                            urgência sem ser urgente impacta diretamente na operação e segurança);</li>
+                                        <li><span class="span_ol">Anexe fotos ou vídeos</span> (o envio facilita a
+                                            análise prévia);</li>
+                                        <li><span class="span_ol">Acompanhe o seu chamado</span> e esteja disponível
+                                            para informações.</li>
+                                    </ol>
+                                    <h2>Chamado Claro = solução rápida!</h2>
+                                </div>
+                                <div class="form-group">
+                                    <h3 class="subtitle">DESCRIÇÃO</h3>
+                                    <textarea name="description" id="description" class="description"
+                                        required></textarea>
+                                </div>
+                            </div>
+                            <div class="btn_submit">
+                                <button class="btn btn_sub" type="submit">Abrir chamados</button>
+                            </div>
+                        </div>
+                </form>
 
-                                <option value="selecione">Selecione</option>
-                                {% for unit in units %}
-                                <optgroup class="optUser" label="{{unit.nome}}">
-                                    {% endfor %}
-                                    {% for name in name_user %}
-                                    <option value="919" selected="selected">{{name.nome}}</option>
-                                    {% endfor %}
-                                </optgroup>
-                            </select>
+                <footer class="site_footer">
+                    <div class="container_footer">
+                        <span class="mr-2">Escolha sua preferência de trabalho:</span>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" class="custom-control-input" id="check-night-mode">
+                            <label class="custom-control-label" for="check-night-mode">Modo noturno</label>
+                        </div>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" class="custom-control-input active" id="check-full-width">
+                            <label class="custom-control-label" for="check-full-width">Largura total</label>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="id_usuario" class="subtitle">SETOR RESPONSÁVEL:</label>
-                            <select name="id_usuario" id="id_usuario"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
-                                {% for sector in sectors %}
-                                <option value="selecione">{{sector.nome}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+
+                    <div class="container_footer_footer">
+                        <p class="mr-p">2025 © Sistema Eletrônico de Documentação. v4.1. Desenvolvido por Senac Pará</p>
+                        <a href="#" class="link-tooltip">Documentos - PSI e PDTI </a>
+                        <p class="mr-p">Conheça a <a href="#">Política de Privacidade </a>do Senac Pará</p>
+                        <a href="#" class="ver-novidades-send">Veja as mudanças no SEND 4</a>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="id_categoria" class="subtitle">CATEGORIA:</label>
-                            <select name="id_categoria" id="id_categoria"
-                                data-subcategories-url="{% url 'get_subcategories' %}"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
-                                <option value="">Selecione uma categoria</option>
-                                {% for category in categories %}
-                                <option value="{{category.id}}">{{category.nome}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="id_subcategoria" class="subtitle">SUB-CATEGORIA:</label>
-                            <select name="id_subcategoria" id="id_subcategoria"
-                                class="required form-control-select2-hidden-accessible select2-container" tabindex="-1">
-                                <option value="">Selecione uma subcategoria</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                </footer>
 
-                <div class="form-group">
-                    <label for="patrimonio" class="subtitle patrimonio">patrimonio:</label>
-                    <input type="text" name="patrimonio" size="11" id="patrimonio" class="digits form-control">
-                </div>
-            </div>
-
-            <div class="progress">
-                <div class="progress-bar progress-bar-success"></div>
-            </div>
-
-            <div>
-                <span class="btn btn-outline-secondary btn-sm fileinput-button"><span class="span_select">Selecionar
-                        arquivos</span>
-                    <input type="file" name="arquivo" class="fileupload" multiple="" data-local="helpdesk" data-url=""
-                        id="form-upload-031578">
-                </span>
-            </div>
-
-            <div class="text-center">
-                <p>Tamanho máximo:35MB</p>
-                <p>Formatos aceitos: jpg, png, jpeg, pdf, xls, xlsx, doc, docx, txt, eml, zip</p>
-            </div>
-
-            <div class="form-group">
-                <div class="alert alert-warning">
-                    <h2>DICAS PARA ABRIR SEU CHAMADO.</h2>
-                    <ol class="mb-2 mt-2">
-                        <li><span class="span_ol">Identifique o máximo possível</span> (nome, códigos, locaulzação;)
-                        </li>
-                        <li><span class="span_ol">Descreva o problema</span> com o precisão (o que acontece, há quanto
-                            tempo, tentativas de solução);</li>
-                        <li><span class="span_ol">Seja sincero, informe a urgência real</span> (informar urgência sem
-                            ser urgente impacta diretamente na operação e segurança);</li>
-                        <li><span class="span_ol">Anexe fotos ou vídeos</span> (o envio facilita a analise prévia);</li>
-                        <li><span class="span_ol">Acompanhe o seu chamado</span> e esteja disponível para informações.
-                        </li>
-                    </ol>
-
-                    <h2>Chamado Claro = solução rápida!</h2>
-                </div>
-
-                <div class="form-group">
-                    <h3 class="subtitle">DESCRIÇÃO</h3>
-
-                    <textarea name="descrition" id="description" class="description"></textarea>
-                </div>
-            </div>
-        </div>
-
-        <div class="btn_submit">
-            <button class="btn btn_sub" type="submit">Abrir chamados</button>
-        </div>
-
-
-        <footer class="site_footer">
-            <div class="container_footer">
-                <span class="mr-2">Escolha sua preferência de trabalho:</span>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" id="check-night-mode">
-                    <label class="custom-control-label" for="check-night-mode">Modo noturno</label>
-                </div>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input active" id="check-full-width">
-                    <label class="custom-control-label" for="check-full-width">Largura total</label>
-                </div>
-            </div>
-
-            <div class="container_footer_footer">
-                <p class="mr-p">2025 © Sistema Eletrônico de Documentação. v4.1. Desenvolvido por Senac Pará</p>
-                <a href="#" class="link-tooltip">Documentos - PSI e PDTI </a>
-                <p class="mr-p">Conheça a <a href="#">Política de Privacidade </a>do Senac Pará</p>
-                <a href="#" class="ver-novidades-send">Veja as mudanças no SEND 4</a>
-            </div>
-        </footer>
-
-        <script src="{% static 'scripts/categories.js' %}"></script>
-        <script src="{% static 'scripts/date.js' %}"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="{% static 'scripts/categories.js' %}"></script>
+                <script src="{% static 'scripts/date.js' %}"></script>
+                <script src="{% static 'scripts/duplicate_div.js' %}"></script>
+                <script src="{% static 'scripts/upload_files.js' %}"></script>
 </body>
 
 </html>
