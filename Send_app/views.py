@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.utils import timezone
 import os
@@ -9,6 +8,13 @@ from django.contrib.auth import logout
 from . import models
 
 # Create your views here.
+
+def custom_404(request, exception):
+    context = get_user_profile(request)
+    if context.get('is_authenticated'):
+        return redirect('home')
+    return redirect('login')
+
 def get_user_profile(request):
     """
     Retorna informações do perfil do usuário logado, se houver.
@@ -28,33 +34,20 @@ def get_user_profile(request):
     return {'user_name': '', 'is_authenticated': False}
 
 def login(request):
-    username = request.POST.get('user')
-    senha = request.POST.get('password')
     if request.method == 'GET':
         return render(request, 'login.html')
-    try:
-        user = models.UsuUsuario.objects.get(login=username, senha=senha)
-    except models.UsuUsuario.DoesNotExist:
-        return redirect('erro_login')
-    # Configure a sessão com as informações do usuário
-    request.session['user_id'] = user.id
-    request.session['user_name'] = user.nome_exibicao or user.nome
-    return redirect('home')
     
-def erro_login(request):
     username = request.POST.get('user')
     senha = request.POST.get('password')
-    if request.method == 'GET':
-        return render(request, 'login.html')
+    
     try:
         user = models.UsuUsuario.objects.get(login=username, senha=senha)
+        # Configure a sessão com as informações do usuário
+        request.session['user_id'] = user.id
+        request.session['user_name'] = user.nome_exibicao or user.nome
+        return redirect('home')
     except models.UsuUsuario.DoesNotExist:
-        return render(request, 'login.html', {'error': 'Crendenciais inválida'})
-    # Configure a sessão com as informações do usuário
-    request.session['user_id'] = user.id
-    request.session['user_name'] = user.nome_exibicao or user.nome
-
-    return redirect('home')
+        return render(request, 'login.html', {'error': 'Credenciais inválidas'})
 
 def logout_view(request):
     logout(request)
@@ -62,20 +55,46 @@ def logout_view(request):
 
 def home(request):
     context = get_user_profile(request)
-    if not context.get('is_authenticated'):
-        return redirect('login')
+    
     # Busca o status "Aberto"
-    status_aberto = models.ChStatus.objects.get(nome='Aberto')
-    # Usa o nome padrão do relacionamento reverso
+    try:
+        status_aberto = models.ChStatus.objects.get(nome='Aberto')
+    except models.ChStatus.DoesNotExist:
+        status_aberto = models.ChStatus.objects.create(nome='Aberto')
+    
     chamados_abertos = models.ChChamado.objects.filter(
         id_status=status_aberto,
+        id_usuario__id=context['user_id'],
         deletado=0
     ).select_related(
         'id_usuario', 'id_setor', 'id_usuario_suporte', 'id_setor_suporte'
     ).prefetch_related(
-        'chcategoriadochamado_set__id_categoria', 
+        'chcategoriadochamado_set__id_categoria',
         'chcategoriadochamado_set__id_subcategoria'
     )
+    
+    # Adiciona as categorias e subcategorias associadas a cada chamado
+    for chamado in chamados_abertos:
+        categorias = chamado.chcategoriadochamado_set.all()
+        chamado.categorias = []
+        for cat in categorias:
+            categoria_nome = (
+                cat.id_categoria.nome
+                if cat.id_categoria and hasattr(cat.id_categoria, 'nome') and cat.id_categoria.nome
+                else "Sem categoria"
+            )
+            subcategoria_nome = (
+                cat.id_subcategoria.nome
+                if cat.id_subcategoria and hasattr(cat.id_subcategoria, 'nome') and cat.id_subcategoria.nome
+                else "Sem subcategoria"
+            )
+            chamado.categorias.append({
+                'categoria': categoria_nome,
+                'subcategoria': subcategoria_nome
+            })
+        if not chamado.categorias:
+            chamado.categorias = [{'categoria': "Sem categoria", 'subcategoria': "Sem subcategoria"}]
+    
     context.update({
         'chamados_abertos': chamados_abertos,
     })
@@ -91,36 +110,36 @@ def get_subcategories(request):
 def helpdesk(request):
     context = get_user_profile(request)
     
-    if not context.get('is_authenticated'):
-        return redirect('login')
-    
     if request.method == 'POST':
         try:
-            usuario_id = request.POST.get('id_usuario')
             setor_id = request.POST.get('id_setor')
             patrimonio = request.POST.get('patrimonio')
             descricao = request.POST.get('description')
             arquivos = request.FILES.getlist('arquivo')
+            # Coleta categorias e subcategorias como listas
             categorias = [value for key, value in request.POST.items() if key.startswith('id_categoria_')]
             subcategorias = [value for key, value in request.POST.items() if key.startswith('id_subcategoria_')]
             
-            # Obter ou criar o status "Aberto"
-            status, created = models.ChStatus.objects.get_or_create(nome='Aberto')
-            if created:
-                messages.info(request, 'Status "Aberto" foi criado automaticamente.')
+            # Valida se há pares correspondentes
+            if len(categorias) != len(subcategorias):
+                messages.error(request, 'O número de categorias e subcategorias não corresponde.')
+                return redirect('helpdesk')
             
-            # Obter objetos
-            usuario = models.UsuUsuario.objects.get(id=int(usuario_id), ativo=1, deletado=0)
+            # Obter ou criar o status "Aberto"
+            status, _ = models.ChStatus.objects.get_or_create(nome='Aberto')
+            
+            # Obter usuário logado
+            usuario = models.UsuUsuario.objects.get(id=context['user_id'], ativo=1, deletado=0)
             setor = models.UsuSetor.objects.get(id=int(setor_id))
             unidade = usuario.id_unidade
             
-            # Criar chamado usando o usuário como id_usuario_suporte temporário
+            # Criar chamado
             chamado = models.ChChamado.objects.create(
                 id_usuario=usuario,
                 id_setor=setor,
                 id_unidade=unidade,
-                id_usuario_suporte=usuario,  # Usa o usuário que abriu o chamado como suporte temporário
-                id_setor_suporte=setor,      # Usa o setor do chamado como setor de suporte temporário
+                id_usuario_suporte=usuario,
+                id_setor_suporte=setor,
                 id_status=status,
                 prioridade=1,
                 patrimonio=int(patrimonio) if patrimonio and patrimonio.strip() else None,
@@ -140,14 +159,26 @@ def helpdesk(request):
             )
             
             # Associar categorias e subcategorias
+            saved_categories = False
             for cat_id, subcat_id in zip(categorias, subcategorias):
-                categoria = models.ChCategoria.objects.get(id=int(cat_id))
-                subcategoria = models.ChSubcategoria.objects.get(id=int(subcat_id))
-                models.ChCategoriaDoChamado.objects.create(
-                    id_chamado=chamado,
-                    id_subcategoria=subcategoria,
-                    id_categoria=categoria
-                )
+                if cat_id and subcat_id:  # Garante que ambos os IDs são válidos
+                    try:
+                        categoria = models.ChCategoria.objects.get(id=int(cat_id))
+                        subcategoria = models.ChSubcategoria.objects.get(id=int(subcat_id))
+                        models.ChCategoriaDoChamado.objects.create(
+                            id_chamado=chamado,
+                            id_subcategoria=subcategoria,
+                            id_categoria=categoria
+                        )
+                        saved_categories = True
+                    except (models.ChCategoria.DoesNotExist, models.ChSubcategoria.DoesNotExist):
+                        messages.warning(request, f'Categoria {cat_id} ou subcategoria {subcat_id} inválida foi ignorada.')
+                else:
+                    messages.warning(request, 'Um par de categoria/subcategoria estava incompleto e foi ignorado.')
+            
+            # Verifica se pelo menos uma categoria foi salva
+            if not saved_categories and categorias:
+                messages.warning(request, 'Nenhuma categoria/subcategoria válida foi associada ao chamado.')
             
             # Processar arquivos
             for arquivo in arquivos:
@@ -172,15 +203,16 @@ def helpdesk(request):
             messages.success(request, 'Chamado aberto com sucesso!')
             return redirect('helpdesk')
         
-        except (models.UsuUsuario.DoesNotExist, models.UsuSetor.DoesNotExist, models.ChCategoria.DoesNotExist, models.ChSubcategoria.DoesNotExist):
-            messages.error(request, 'Um ou mais valores selecionados são inválidos.')
+        except (models.UsuUsuario.DoesNotExist, models.UsuSetor.DoesNotExist):
+            messages.error(request, 'Usuário ou setor inválido.')
         except Exception as e:
+            print(f"Erro ao abrir chamado: {e}")  # Depuração
             messages.error(request, f'Erro ao abrir chamado: {str(e)}')
         
         return redirect('helpdesk')
     
     context.update({
-        'name_user': models.UsuUsuario.objects.all(),
+        'name_user': [models.UsuUsuario.objects.get(id=context['user_id'])],
         'units': models.UsuUnidade.objects.all(),
         'sectors': models.UsuSetor.objects.all(),
         'categories': models.ChCategoria.objects.all(),

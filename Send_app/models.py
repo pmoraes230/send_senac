@@ -70,7 +70,7 @@ class ChChamado(models.Model):
     id_setor_suporte = models.ForeignKey('UsuSetor', models.DO_NOTHING, db_column='id_setor_suporte', related_name='chchamado_id_setor_suporte_set')
     id_status = models.ForeignKey('ChStatus', models.DO_NOTHING, db_column='id_status')
     prioridade = models.IntegerField(blank=True, null=True)
-    patrimonio = models.IntegerField(blank=True, null=True)
+    patrimonio = models.CharField(max_length=50, blank=True, null=True)
     data_inicio_suporte = models.DateTimeField(blank=True, null=True)
     data_encerramento = models.DateTimeField(blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)

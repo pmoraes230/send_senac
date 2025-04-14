@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
         integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="https://www.pa.senac.br/send4/resources/img/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon" />
     <link rel="stylesheet" href="{% static 'style/home.css' %}" />
     <link rel="stylesheet" href="{% static 'style/helpdesk.css' %}">
     <title>Abrir chamado</title>
@@ -19,7 +19,7 @@
     <header class="container_header navbar">
         <div class="container_acessibidades mx-3">
             <div class="img_send ml-3">
-                <a href="{% url "home" %}"><img src="https://www.pa.senac.br/send4/resources/img/send-large.png"
+                <a href="{% url "home" %}"><img src="{% static 'img/send-large.png' %}"
                         alt="logo_send" /></a>
             </div>
             <div class="btn_acessibilidades">
@@ -29,7 +29,7 @@
         </div>
 
         <figure class="img-fluid center-block ml-auto logo-senac">
-            <img src="https://www.pa.senac.br/send4/resources/img/senac/logo_regional.png" alt="logo senac" />
+            <img src="{% static 'img/Senac.jpg' %}" alt="logo senac" />
         </figure>
 
         <div class="conteiner_icons navbar-nav">
@@ -73,7 +73,7 @@
                 <nav class="breadcrumb">
                     <ul>
                         <li><a href="{% url "home" %}">Home</a></li>
-                        <li><a href="#">Helpdesk</a></li>
+                        <li><a href="{% url "helpdesk" %}">Helpdesk</a></li>
                         <li><a href="#">Chamados</a></li>
                         <li><a href="#">Abrir chamado</a></li>
                     </ul>
@@ -112,7 +112,7 @@
                                         <select name="id_usuario" id="id_usuario"
                                             class="required form-control-select2-hidden-accessible select2-container"
                                             required>
-                                            <option value="" disabled >Selecione um usuário</option>
+                                            <option value="" disabled>Selecione um usuário</option>
                                             {% for unit in units %}
                                             <optgroup class="optUser" label="{{unit.nome}}">
                                                 {% for name in name_user %}
@@ -175,8 +175,8 @@
 
                             <div class="form-group">
                                 <label for="patrimonio" class="subtitle patrimonio">PATRIMÔNIO:</label>
-                                <input type="text" name="patrimonio" size="11" id="patrimonio"
-                                    class="digits form-control">
+                                <input type="text" name="patrimonio" id="patrimonio"
+                                    class="digits form-control" placeholder="Somente número inteiro">
                             </div>
                             <div class="progress">
                                 <div class="progress-bar"></div>
@@ -189,7 +189,7 @@
                                         accept=".jpg,.jpeg,.png,.pdf,.xls,.xlsx,.doc,.docx,.txt,.eml,.zip">
                                 </span>
                             </div>
-                            <div id="message"></div>
+                            <div id="message" style="margin-top: 1rem;"></div>
                             <div class="text-center">
                                 <p>Tamanho máximo: 35MB</p>
                                 <p>Formatos aceitos: jpg, png, jpeg, pdf, xls, xlsx, doc, docx, txt, eml, zip</p>
@@ -217,37 +217,41 @@
                                         required></textarea>
                                 </div>
                             </div>
-                            <div class="btn_submit">
-                                <button class="btn btn_sub" type="submit">Abrir chamados</button>
-                            </div>
-                        </div>
-                </form>
-
-                <footer class="site_footer">
-                    <div class="container_footer">
-                        <span class="mr-2">Escolha sua preferência de trabalho:</span>
-                        <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="check-night-mode">
-                            <label class="custom-control-label" for="check-night-mode">Modo noturno</label>
-                        </div>
-                        <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input active" id="check-full-width">
-                            <label class="custom-control-label" for="check-full-width">Largura total</label>
                         </div>
                     </div>
+            </div>
+        </div>
+        <div class="btn_submit">
+            <button class="btn btn_sub" type="submit">Abrir chamados</button>
+        </div>
+        </form>
 
-                    <div class="container_footer_footer">
-                        <p class="mr-p">2025 © Sistema Eletrônico de Documentação. v4.1. Desenvolvido por Senac Pará</p>
-                        <a href="#" class="link-tooltip">Documentos - PSI e PDTI </a>
-                        <p class="mr-p">Conheça a <a href="#">Política de Privacidade </a>do Senac Pará</p>
-                        <a href="#" class="ver-novidades-send">Veja as mudanças no SEND 4</a>
-                    </div>
-                </footer>
+        <footer class="site_footer">
+            <div class="container_footer">
+                <span class="mr-2">Escolha sua preferência de trabalho:</span>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" id="check-night-mode">
+                    <label class="custom-control-label" for="check-night-mode">Modo noturno</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input active" id="check-full-width">
+                    <label class="custom-control-label" for="check-full-width">Largura total</label>
+                </div>
+            </div>
 
-                <script src="{% static 'scripts/categories.js' %}"></script>
-                <script src="{% static 'scripts/date.js' %}"></script>
-                <script src="{% static 'scripts/duplicate_div.js' %}"></script>
-                <script src="{% static 'scripts/upload_files.js' %}"></script>
+            <div class="container_footer_footer">
+                <p class="mr-p">2025 © Sistema Eletrônico de Documentação. v4.1. Desenvolvido por Senac Pará</p>
+                <a href="#" class="link-tooltip">Documentos - PSI e PDTI </a>
+                <p class="mr-p">Conheça a <a href="#">Política de Privacidade </a>do Senac Pará</p>
+                <a href="#" class="ver-novidades-send">Veja as mudanças no SEND 4</a>
+            </div>
+        </footer>
+
+        <script src="{% static 'scripts/categories.js' %}"></script>
+        <script src="{% static 'scripts/date.js' %}"></script>
+        <script src="{% static 'scripts/duplicate_div.js' %}"></script>
+        <script src="{% static 'scripts/upload_files.js' %}"></script>
+        <script src="{% static 'scripts/font.js' %}"></script>
 </body>
 
 </html>

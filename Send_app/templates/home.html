@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
         integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="https://www.pa.senac.br/send4/resources/img/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon" />
     <link rel="stylesheet" href="{% static 'style/home.css' %}" />
     <title>Send</title>
 </head>
@@ -18,7 +18,7 @@
     <header class="container_header navbar">
         <div class="container_acessibidades mx-3">
             <div class="img_send ml-3">
-                <a href="{% url "home" %}"><img src="https://www.pa.senac.br/send4/resources/img/send-large.png" alt="logo_send" /></a>
+                <a href="{% url "home" %}"><img src="{% static 'img/send-large.png' %}" alt="logo_send" /></a>
             </div>
             <div class="btn_acessibilidades">
                 <a href="#" class="btn_acesso ml-3">Acessar</a>
@@ -27,7 +27,7 @@
         </div>
 
         <figure class="img-fluid center-block ml-auto logo-senac">
-            <img src="https://www.pa.senac.br/send4/resources/img/senac/logo_regional.png" alt="logo senac" />
+            <img src="{% static 'img/Senac.jpg' %}" alt="logo senac" />
         </figure>
 
         <div class="conteiner_icons navbar-nav">
@@ -104,7 +104,7 @@
                             <a class="nav-item" href="#">Processos</a>
                         </li>
                         <li>
-                            <a class="nav-item" href="#">Helpdesk</a>
+                            <a class="nav-item" href="{% url "helpdesk" %}">Helpdesk</a>
                         </li>
                         <li>
                             <a class="nav-item" href="#">Contratos</a>
@@ -138,7 +138,7 @@
             <div class="card bg-white">
                 <div class="card-header">
                     <img src="{% static 'icons/minus.svg' %}" alt="icon-plus" class="icon_plus" />
-                    <h4>Processos - pendentes</h4>
+                    <h4>Chamados no helpdesk</h4>
                 </div>
                 
                 <div class="card-content">
@@ -219,6 +219,7 @@
 
     <script src="{% static 'scripts/drop_home.js' %}"></script>
     <script src="{% static 'scripts/date.js' %}"></script>
+    <script src="{% static 'scripts/font.js' %}"></script>
 </body>
 
 </html>

@@ -139,6 +139,7 @@ ol {
     border: 1px solid #ccc;
     border-radius: 4px;
     overflow: hidden;
+    margin-bottom: 1.5rem;
 }
 
 .fileinput-button:hover {
@@ -158,10 +159,10 @@ input[type="file"] {
 }
 
 .progress-bar {
-    height: 100%;
     width: 0%;
-    background-color: #28a745;
-    transition: width 0.3s ease;
+    height: 100%;
+    background-color: #007bff;
+    transition: width 0.3s ease-in-out;
 }
 
 btn:not([disabled]):not(.disabled) {
@@ -174,9 +175,8 @@ btn:not([disabled]):not(.disabled) {
 
 .fileinput-button {
     position: relative;
-    /* overflow: hidden; */
     display: inline-block;
-    margin-top: 1rem;
+    cursor: pointer;
 }
 
 .btn-sm, .btn-group-sm>.btn {
@@ -207,14 +207,13 @@ btn:not([disabled]):not(.disabled) {
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-.fileinput-button input {
+.fileinput-button input[type="file"] {
     position: absolute;
     top: 0;
-    right: 0;
-    margin: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     opacity: 0;
-    font-size: 200px !important;
-    direction: ltr;
     cursor: pointer;
 }
 
@@ -323,4 +322,25 @@ a, area, button, [role="button"], input:not([type="range"]), label, select, summ
 .width-100 {
     width: 100%;
     margin: auto;
+}
+
+
+@media (max-width: 1580px) {
+    .logo-senac img {
+        margin-right: 5rem;
+    }
+
+    .page-header, .page-header-title {
+        margin-right: 51%;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header, .page-header-title {
+        margin-right: 25%;
+    }
+
+    .logo-senac img {
+        margin-right: 12rem;
+    }
 }

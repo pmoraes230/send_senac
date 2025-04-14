@@ -248,14 +248,12 @@ img {
 
 .card {
     background-color: #ffffffc7;
-    border-radius: 5px;
-    margin-bottom: 30px;
     position: relative;
     display: flex;
     flex-direction: column;
     width: 95%;
-    margin: 0 auto 1rem;
-    padding: 1rem .80rem 2rem;
+    margin: auto;
+    padding: 1rem 0.8rem 1rem;
 }
 
 .bg-white {
@@ -465,4 +463,75 @@ input[type="checkbox"],input[type="radio"]{
 
 .btn_logout:hover {
     background-color: #d32f2f;
+}
+
+@media (max-width: 1440px) {
+    .page-header, .page-header-title {
+        margin-right: 77%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .page-header, .page-header-title {
+        margin-right: 70%;
+    }
+}
+
+@media (max-width: 1580px) {
+    .logo-senac img {
+        margin-right: 5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container_header {
+        flex-wrap: wrap;
+        width: 95%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .menu-primario {
+        width: 95%;
+    }
+
+    .word_painel {
+        width: 93%;
+    }
+
+    .logo-senac img {
+        margin-right: 15rem;
+    }
+
+    .section_aside {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .page-header, .page-header-title {
+        margin-right: 0%;
+    }
+
+    .btn {
+        font-size: 0.90rem;
+    }
+
+    .btn_sub {
+        width: 55%;
+    }
+
+    .btn_add, .btn_remove {
+        width: 100%;
+    }
+
+    .container_footer {
+        width: 72%;
+    } 
+
+    .mr-p {
+        font-size: 13px;
+        text-align: center;
+    }
 }

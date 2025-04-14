@@ -11,6 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-r5wl$0bqkdz89pm31dldso6hos1d8**#^bf)g0$g_mcf=fi!p4'
 
+# Garante que a sessão expire ao fechar o navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -40,6 +43,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Send_app.middleware.auth.AuthRedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'Send.urls'
