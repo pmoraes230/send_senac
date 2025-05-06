@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r5wl$0bqkdz89pm31dldso6hos1d8**#^bf)g0$g_mcf=fi!p4'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Garante que a sessão expire ao fechar o navegador
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

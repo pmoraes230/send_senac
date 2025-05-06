@@ -1,0 +1,179 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+        integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'style/home.css' %}" />
+    <link rel="stylesheet" href="{% static 'style/int_chamado.css' %}" />
+    <title>Send</title>
+</head>
+
+<body>
+    <header class="container_header navbar">
+        <div class="container_acessibidades mx-3">
+            <div class="img_send ml-3">
+                <a href="{% url 'home' %}"><img src="{% static 'img/send-large.png' %}" alt="logo_send" /></a>
+            </div>
+            <div class="btn_acessibilidades">
+                <a href="#" class="btn_acesso ml-3">Acessar</a>
+                <input type="text" placeholder="Acesso rápido" class="ml-3 form-control" />
+            </div>
+        </div>
+
+        <figure class="img-fluid center-block ml-auto logo-senac">
+            <img src="{% static 'img/Senac.jpg' %}" alt="logo senac" />
+        </figure>
+
+        <div class="conteiner_icons navbar-nav">
+            <a href="{% url 'helpdesk' %}" class="helpdesk">Helpdesk</a>
+            <div class="icons_header">
+                <img src="{% static 'icons/star_blue.svg' %}" alt="icon_star" class="icons" />
+                <img src="{% static 'icons/bell.svg' %}" alt="icon_bell" />
+                <img src="{% static 'icons/time.svg' %}" alt="icon_time" />
+            </div>
+
+            <div class="user_camp">
+                <img src="{% static 'icons/user.svg' %}" alt="icon_user" class="icon_user" />
+                {% if user_name %}
+                <p class="name_user">{{ user_name }}</p>
+                <form action="{% url 'logout' %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn_logout">Logout</button>
+                </form>
+                {% else %}
+                <p class="name_user">Nenhum usuário logado</p>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="container page-content">
+        <aside class="section_aside">
+            <div class="left_aside">
+                <nav class="breadcrumb">
+                    <ul>
+                        <li>
+                            <a href="#">Home</a>
+                        </li>
+                        <li>
+                            <a href="#">SEND</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="right_aside">
+                <div class="meta_header">
+                    <span class="time"></span>
+                    <span class="date" id="date"></span>
+                    <span class="btn-font">
+                        <a href="#" class="increaseFont">A+</a>
+                        <a href="#" class="resetFont">A</a>
+                        <a href="#" class="decreaseFont">A-</a>
+                    </span>
+                </div>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-header-title">
+                    <img src="{% static 'icons/star.svg' %}" alt="" />
+                    HELPDESK #{{ chamado.id }}
+                </h1>
+            </div>
+        </aside>
+
+        <div class="container_inf">
+            <div class="whapper_color_inf">
+                <h1 class="title_inf">Sobre o Chamado</h1>
+                <div class="container_about_chamado">
+                    <div class="inf_left">
+                        <div class="inf_chamado">
+                            <h1 class="inf">Status:</h1>
+                            <p class="status">{{ status_chamada.nome }}</p>
+                        </div>
+
+                        <div class="inf_chamado">
+                            <h1 class="inf">Categoria:</h1>
+                            <p class="status">ainda colocar</p>
+                            <p class="status">ainda colocar</p>
+                        </div>
+
+                        <div class="inf_chamado">
+                            <h1 class="inf">Solicitante:</h1>
+                            <p class="status">ainda colocar</p>
+                            <p class="status">departamento da pessoa</p>
+                        </div>
+
+                        <div class="inf_chamado">
+                            <h1 class="inf">Patrimônio:</h1>
+                            <p class="status">ainda colocar</p>
+                        </div>
+                    </div>
+                    <div class="inf_right">
+                        <div class="inf_chamado">
+                            <h1 class="inf">Data de cadastro:</h1>
+                            <p class="status">ainda colocar</p>
+                        </div>
+
+                        <div class="inf_chamado">
+                            <h1 class="inf">Técnico(a) Responsável:</h1>
+                            <p class="status">ainda colocar</p>
+                        </div>
+
+                        <div class="inf_chamado">
+                            <h1 class="inf">Cadastrado Por:</h1>
+                            <p class="status">ainda colocar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inf_detalhes">
+                <h1 class="title_interacao">Tramitação</h1>
+
+                <div class="camp_descricao">
+                    <h1 class="inf_persona">Nome do individuo</h1>
+                    <p class="data_envio">Despacho em 16 de março de 2004 às 16:46h</p>
+                    <div class="message">
+                        <img src="{% static 'icons/quotation-marks.svg' %}" alt="icon quotation-marks">
+                        <p class="status">mensagem aqui</p>
+                    </div>
+                </div>
+
+                <div class="camp_descricao">
+                    <h1 class="inf_persona margin_botton">Nome do individuo</h1>
+
+                    <form action="#" method="POST" class="input_mensagem">
+                        {% csrf_token %}
+                        <label for="mensagem" class="descrip_form">Acrescentar no chamado</label>
+                        <textarea name="mensagem" id="mensagem" cols="30" rows="10" class="form-mensagem" placeholder="Digite sua mensagem aqui..."></textarea>
+
+                        <p class="descrip_form magin_top">Deseja anexar arquivo?</p>
+                        <div class="check_org">
+                            <input type="checkbox" name="check" id="check_sim" class="check_label">
+                            <label for="check_sim" class="check_label">Sim</label>
+
+                            <input type="checkbox" name="check" id="check_nao" class="check_label" checked>
+                            <label for="check_nao">Não</label>
+                        </div>
+
+                        <div class="btn_submist">
+                            <button type="submit" class="btn_enviar">Enviar mansagem</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'scripts/date.js' %}"></script>
+    <script src="{% static 'scripts/font.js' %}"></script>
+    <script src="{% static 'scripts/check.js' %}"></script>
+</body>
+
+</html>

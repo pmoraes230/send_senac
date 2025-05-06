@@ -168,9 +168,10 @@
                                             <ul class="category-list">
                                                 {% for cat in chamado.chcategoriadochamado_set.all %}
                                                     <li>{{ cat.id_categoria.nome }} / {{ cat.id_subcategoria.nome }}</li>
-                                                {% empty %}
-                                                    <li>Sem categoria/subcategoria</li>
                                                 {% endfor %}
+                                                {% if not chamado.chcategoriadochamado_set.exists %}
+                                                    <li>Sem categoria/subcategoria</li>
+                                                {% endif %}
                                             </ul>
                                         </td>
                                         <td>{{ chamado.id_usuario.nome }}</td>
@@ -182,6 +183,19 @@
                                             {% endif %}
                                         </td>
                                         <td>{{ chamado.descricao|truncatewords:10 }}</td>
+                                        <td>
+                                            <td>
+                                                <a href="{% url 'int_chamado' chamado.id %}" class="icon_magnifying-glass">
+                                                    <img 
+                                                        src="{% static 'icons/magnifying-glass.svg' %}" 
+                                                        alt="magnifying-glass icon" 
+                                                        class="hover-icon" 
+                                                        onmouseover="this.src='{% static 'icons/magnifying-glass-white.svg' %}'" 
+                                                        onmouseout="this.src='{% static 'icons/magnifying-glass.svg' %}'" 
+                                                    />
+                                                </a>
+                                            </td>
+                                        </td>
                                     </tr>
                                 {% empty %}
                                     <tr>

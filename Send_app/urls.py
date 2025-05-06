@@ -11,4 +11,5 @@ urlpatterns = [
     path("helpdesk/", views.helpdesk, name='helpdesk'),
     path('get_subcategories/', views.get_subcategories, name='get_subcategories'),
     path('logout/', views.logout_view, name='logout'),
+    path('int_chamado/<int:chamado_id>/', views.int_chamado, name='int_chamado'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

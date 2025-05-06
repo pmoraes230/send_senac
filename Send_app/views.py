@@ -56,48 +56,46 @@ def logout_view(request):
 def home(request):
     context = get_user_profile(request)
     
-    # Busca o status "Aberto"
     try:
-        status_aberto = models.ChStatus.objects.get(nome='Aberto')
-    except models.ChStatus.DoesNotExist:
-        status_aberto = models.ChStatus.objects.create(nome='Aberto')
+        # Busca o status "Aberto" ou cria caso não exista
+        status_aberto, _ = models.ChStatus.objects.get_or_create(nome='Aguardando Atendimento')
+        
+        # Filtra os chamados abertos do usuário logado
+        chamados_abertos = models.ChChamado.objects.filter(
+            id_status=status_aberto,
+            id_usuario__id=context['user_id'],
+            deletado=0
+        ).select_related(
+            'id_usuario', 'id_setor', 'id_usuario_suporte', 'id_setor_suporte'
+        ).prefetch_related(
+            'chcategoriadochamado_set__id_categoria',
+            'chcategoriadochamado_set__id_subcategoria'
+        )
+        
+        # Processa categorias e subcategorias associadas a cada chamado
+        for chamado in chamados_abertos:
+            chamado.categorias = []
+            for cat in chamado.chcategoriadochamado_set.all():
+                categoria_nome = cat.id_categoria.nome if cat.id_categoria else "Sem categoria"
+                subcategoria_nome = cat.id_subcategoria.nome if cat.id_subcategoria else "Sem subcategoria"
+                chamado.categorias.append({
+                    'categoria': categoria_nome,
+                    'subcategoria': subcategoria_nome
+                })
+            
+            # Caso não haja categorias associadas, adiciona um valor padrão
+            if not chamado.categorias:
+                chamado.categorias.append({
+                    'categoria': "Sem categoria",
+                    'subcategoria': "Sem subcategoria"
+                })
+        
+        # Atualiza o contexto com os chamados abertos
+        context.update({'chamados_abertos': chamados_abertos})
     
-    chamados_abertos = models.ChChamado.objects.filter(
-        id_status=status_aberto,
-        id_usuario__id=context['user_id'],
-        deletado=0
-    ).select_related(
-        'id_usuario', 'id_setor', 'id_usuario_suporte', 'id_setor_suporte'
-    ).prefetch_related(
-        'chcategoriadochamado_set__id_categoria',
-        'chcategoriadochamado_set__id_subcategoria'
-    )
-    
-    # Adiciona as categorias e subcategorias associadas a cada chamado
-    for chamado in chamados_abertos:
-        categorias = chamado.chcategoriadochamado_set.all()
-        chamado.categorias = []
-        for cat in categorias:
-            categoria_nome = (
-                cat.id_categoria.nome
-                if cat.id_categoria and hasattr(cat.id_categoria, 'nome') and cat.id_categoria.nome
-                else "Sem categoria"
-            )
-            subcategoria_nome = (
-                cat.id_subcategoria.nome
-                if cat.id_subcategoria and hasattr(cat.id_subcategoria, 'nome') and cat.id_subcategoria.nome
-                else "Sem subcategoria"
-            )
-            chamado.categorias.append({
-                'categoria': categoria_nome,
-                'subcategoria': subcategoria_nome
-            })
-        if not chamado.categorias:
-            chamado.categorias = [{'categoria': "Sem categoria", 'subcategoria': "Sem subcategoria"}]
-    
-    context.update({
-        'chamados_abertos': chamados_abertos,
-    })
+    except Exception as e:
+        print(f"Erro ao carregar a página inicial: {e}")  # Log para depuração
+        messages.error(request, 'Erro ao carregar os chamados abertos.')
     
     return render(request, 'home.html', context)
 
@@ -126,7 +124,7 @@ def helpdesk(request):
                 return redirect('helpdesk')
             
             # Obter ou criar o status "Aberto"
-            status, _ = models.ChStatus.objects.get_or_create(nome='Aberto')
+            status, _ = models.ChStatus.objects.get_or_create(nome='Aguardando Atendimento')
             
             # Obter usuário logado
             usuario = models.UsuUsuario.objects.get(id=context['user_id'], ativo=1, deletado=0)
@@ -220,3 +218,54 @@ def helpdesk(request):
     })
     
     return render(request, 'helpdesk.html', context)
+
+def int_chamado(request, chamado_id):
+    context = get_user_profile(request)
+    
+    try:
+        # Busca o chamado pelo ID
+        chamado = models.ChChamado.objects.get(id=chamado_id, deletado=0)
+        
+        # Verifica se o usuário logado é o mesmo associado ao chamado
+        if chamado.id_usuario.id != context['user_id']:
+            messages.error(request, 'Você não tem permissão para visualizar este chamado.')
+            return redirect('home')
+        
+        # Lida com o envio de mensagens
+        if request.method == 'POST':
+            mensagem = request.POST.get('mensagem')
+            if mensagem:
+                usuario = models.UsuUsuario.objects.get(id=context['user_id'])
+                status = chamado.id_status  # Usa o status atual do chamado
+                
+                # Cria uma nova interação
+                models.ChInteracao.objects.create(
+                    id_usuario=usuario,
+                    id_chamado=chamado,
+                    id_status=status,
+                    descricao=mensagem,
+                    suporte=0,  # Define se é uma mensagem do suporte ou do usuário
+                    data_cadastro=timezone.now()
+                )
+                messages.success(request, 'Mensagem enviada com sucesso!')
+                return redirect('int_chamado', chamado_id=chamado.id)
+            else:
+                messages.error(request, 'A mensagem não pode estar vazia.')
+
+        # Busca as interações relacionadas ao chamado
+        interacoes = models.ChInteracao.objects.filter(
+            id_chamado=chamado
+        ).select_related('id_usuario', 'id_status').order_by('data_cadastro')
+        
+        # Atualiza o contexto com o chamado e as interações
+        context.update({
+            'chamado': chamado,
+            'interacoes': interacoes,
+            'status_chamada': chamado.id_status,  # Mostra apenas o status do chamado atual
+        })
+    
+    except models.ChChamado.DoesNotExist:
+        messages.error(request, 'Chamado não encontrado.')
+        return redirect('home')
+    
+    return render(request, 'int_chamados.html', context)

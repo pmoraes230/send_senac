@@ -465,6 +465,19 @@ input[type="checkbox"],input[type="radio"]{
     background-color: #d32f2f;
 }
 
+.icon_magnifying-glass img {
+    height: 20px;
+    width: auto;
+    border: 2px solid #1e65ab;
+    padding: 10px;
+    border-radius: 50px;
+}
+
+.icon_magnifying-glass:hover img {
+    background-color: #1e65ab;
+    border: 2px solid #fff;
+}
+
 @media (max-width: 1440px) {
     .page-header, .page-header-title {
         margin-right: 77%;
