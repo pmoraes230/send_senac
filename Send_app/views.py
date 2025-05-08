@@ -1,3 +1,4 @@
+from functools import wraps
 from django.http import JsonResponse
 from django.contrib import messages
 from django.utils import timezone
@@ -23,15 +24,35 @@ def get_user_profile(request):
     user_id = request.session.get('user_id')
     if user_id:
         try:
-            user = models.UsuUsuario.objects.get(id=user_id, ativo=1, deletado=0)
+            user = models.UsuUsuario.objects.select_related('id_grupo_usuario').get(id=user_id, ativo=1, deletado=0)
             return {
                 'user_id': user.id,
                 'user_name': user.nome_exibicao or user.nome,
+                'user_role': user.id_grupo_usuario.nome,
                 'is_authenticated': True
             }
         except models.UsuUsuario.DoesNotExist:
             return {'user_name': '', 'is_authenticated': False}
     return {'user_name': '', 'is_authenticated': False}
+
+def role_required(*roles):
+    """
+    Decorador para verificar se o usuário pertence a um dos grupos especificados.
+    """
+
+    def decorator(view_funv):
+        @wraps(view_funv)
+        def _wrapped_view(request, *args, **kwargs):
+            user_profile = get_user_profile(request)
+            user_role = user_profile.get('user_role')
+
+            if user_role not in roles:
+                messages.error(request, 'Você não tem permissão para acessar esta página.')
+                return redirect('login')
+            
+            return view_funv(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
 
 def login(request):
     if request.method == 'GET':
@@ -42,9 +63,9 @@ def login(request):
     
     try:
         user = models.UsuUsuario.objects.get(login=username, senha=senha)
-        # Configure a sessão com as informações do usuário
         request.session['user_id'] = user.id
         request.session['user_name'] = user.nome_exibicao or user.nome
+        request.session['user_role'] = user.id_grupo_usuario.nome
         return redirect('home')
     except models.UsuUsuario.DoesNotExist:
         return render(request, 'login.html', {'error': 'Credenciais inválidas'})
@@ -105,6 +126,7 @@ def get_subcategories(request):
     subcategories = models.ChSubcategoria.objects.filter(id_categoria=category_id).values('id', 'nome')
     return JsonResponse(list(subcategories), safe=False)
 
+@role_required('A', 'B', 'C', 'D')
 def helpdesk(request):
     context = get_user_profile(request)
     
@@ -234,12 +256,14 @@ def int_chamado(request, chamado_id):
         # Lida com o envio de mensagens
         if request.method == 'POST':
             mensagem = request.POST.get('mensagem')
+            arquivo = request.FILES.get('arquivo')  # Obtém o arquivo enviado
+            
             if mensagem:
                 usuario = models.UsuUsuario.objects.get(id=context['user_id'])
                 status = chamado.id_status  # Usa o status atual do chamado
                 
                 # Cria uma nova interação
-                models.ChInteracao.objects.create(
+                interacao = models.ChInteracao.objects.create(
                     id_usuario=usuario,
                     id_chamado=chamado,
                     id_status=status,
@@ -247,6 +271,20 @@ def int_chamado(request, chamado_id):
                     suporte=0,  # Define se é uma mensagem do suporte ou do usuário
                     data_cadastro=timezone.now()
                 )
+                
+                # Se um arquivo foi enviado, cria um registro em ChArquivo
+                if arquivo:
+                    extensao = os.path.splitext(arquivo.name)[1].lower()[1:]
+                    caminho_arquivo = default_storage.save(f'chamados/{chamado.id}/{arquivo.name}', arquivo)
+                    models.ChArquivo.objects.create(
+                        id_interacao=interacao,
+                        arquivo=caminho_arquivo,
+                        extensao=extensao,
+                        tamanho=arquivo.size / (1024 * 1024),  # Tamanho em MB
+                        deletado=0,
+                        data_cadastro=timezone.now()
+                    )
+                
                 messages.success(request, 'Mensagem enviada com sucesso!')
                 return redirect('int_chamado', chamado_id=chamado.id)
             else:
@@ -256,12 +294,25 @@ def int_chamado(request, chamado_id):
         interacoes = models.ChInteracao.objects.filter(
             id_chamado=chamado
         ).select_related('id_usuario', 'id_status').order_by('data_cadastro')
+
+        # Busca os arquivos relacionados às interações do chamado
+        arquivos = models.ChArquivo.objects.filter(
+            id_interacao__id_chamado=chamado,
+            deletado=0
+        )
         
-        # Atualiza o contexto com o chamado e as interações
+        # Atualiza o contexto com o chamado, interações e arquivos
         context.update({
             'chamado': chamado,
             'interacoes': interacoes,
-            'status_chamada': chamado.id_status,  # Mostra apenas o status do chamado atual
+            'arquivos': arquivos,
+            'status_chamada': chamado.id_status,  # Status do chamado
+            'categorias': chamado.chcategoriadochamado_set.all(),  # Categorias e subcategorias
+            'solicitante': chamado.id_usuario,  # Usuário que abriu o chamado
+            'patrimonio': chamado.patrimonio,  # Patrimônio associado ao chamado
+            'data_cadastro': chamado.data_cadastro,  # Data de cadastro do chamado
+            'tecnico_responsavel': chamado.id_usuario_suporte,  # Técnico responsável
+            'cadastrado_por': chamado.id_usuario,  # Usuário que cadastrou o chamado
         })
     
     except models.ChChamado.DoesNotExist:
@@ -269,3 +320,101 @@ def int_chamado(request, chamado_id):
         return redirect('home')
     
     return render(request, 'int_chamados.html', context)
+
+@role_required('A', 'B', 'C')  # Apenas usuários das categorias A, B e C podem acessar
+def suport_chamado(request, chamado_id):
+    context = get_user_profile(request)
+
+    try:
+        # Busca o chamado pelo ID
+        chamado = models.ChChamado.objects.get(id=chamado_id, deletado=0)
+
+        # Verifica se o usuário logado tem permissão para acessar o chamado
+        user_role = context['user_role']
+        chamado_role = chamado.id_usuario.id_grupo_usuario.nome  # Obtém o grupo do usuário que abriu o chamado
+
+        # Define a hierarquia de permissões
+        hierarquia = {
+            'A': ['A', 'B', 'C', 'Usuário Comum'],  # A pode acessar todos
+            'B': ['B', 'C', 'Usuário Comum'],       # B pode acessar B, C e Usuário Comum
+            'C': ['C', 'Usuário Comum'],            # C pode acessar C e Usuário Comum
+        }
+
+        if chamado_role not in hierarquia.get(user_role, []):
+            messages.error(request, 'Você não tem permissão para acessar este chamado.')
+            return redirect('home')
+
+        # Lida com o envio de mensagens do suporte
+        if request.method == 'POST':
+            mensagem = request.POST.get('mensagem')
+            arquivo = request.FILES.get('arquivo')
+
+            if mensagem:
+                usuario = models.UsuUsuario.objects.get(id=context['user_id'])
+
+                # Cria uma nova interação como suporte
+                interacao = models.ChInteracao.objects.create(
+                    id_usuario=usuario,
+                    id_chamado=chamado,
+                    id_status=chamado.id_status,
+                    descricao=mensagem,
+                    suporte=1,  # Define que é uma mensagem do suporte
+                    data_cadastro=timezone.now()
+                )
+
+                # Se um arquivo foi enviado, cria um registro em ChArquivo
+                if arquivo:
+                    extensao = os.path.splitext(arquivo.name)[1].lower()[1:]
+                    caminho_arquivo = default_storage.save(f'chamados/{chamado.id}/{arquivo.name}', arquivo)
+                    models.ChArquivo.objects.create(
+                        id_interacao=interacao,
+                        arquivo=caminho_arquivo,
+                        extensao=extensao,
+                        tamanho=arquivo.size / (1024 * 1024),  # Tamanho em MB
+                        deletado=0,
+                        data_cadastro=timezone.now()
+                    )
+
+                messages.success(request, 'Resposta enviada com sucesso!')
+                return redirect('suport_chamado', chamado_id=chamado.id)
+            else:
+                messages.error(request, 'A mensagem não pode estar vazia.')
+
+        # Busca as interações relacionadas ao chamado
+        interacoes = models.ChInteracao.objects.filter(
+            id_chamado=chamado
+        ).select_related('id_usuario', 'id_status').order_by('data_cadastro')
+
+        # Busca os arquivos relacionados às interações do chamado
+        arquivos = models.ChArquivo.objects.filter(
+            id_interacao__id_chamado=chamado,
+            deletado=0
+        )
+
+        # Filtra os chamados abertos com base na hierarquia
+        chamados_abertos = models.ChChamado.objects.filter(
+            deletado=0,
+            id_status__nome='Aberto',  # Certifique-se de que o status "Aberto" está correto
+            id_usuario__id_grupo_usuario__nome__in=hierarquia.get(user_role, [])
+        ).select_related('id_usuario', 'id_usuario_suporte', 'id_status')
+
+
+        # Atualiza o contexto com o chamado, interações e arquivos
+        context.update({
+            'chamado': chamado,
+            'interacoes': interacoes,
+            'arquivos': arquivos,
+            'status_chamada': chamado.id_status,  # Status do chamado
+            'categorias': chamado.chcategoriadochamado_set.all(),  # Categorias e subcategorias
+            'solicitante': chamado.id_usuario,  # Usuário que abriu o chamado
+            'patrimonio': chamado.patrimonio,  # Patrimônio associado ao chamado
+            'data_cadastro': chamado.data_cadastro,  # Data de cadastro do chamado
+            'tecnico_responsavel': chamado.id_usuario_suporte,  # Técnico responsável
+            'cadastrado_por': chamado.id_usuario,  # Usuário que cadastrou o chamado
+        })
+
+    except models.ChChamado.DoesNotExist:
+        messages.error(request, 'Chamado não encontrado.')
+        return redirect('home')
+
+    return render(request, 'suport_chamado.html', context)

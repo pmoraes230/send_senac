@@ -12,4 +12,5 @@ urlpatterns = [
     path('get_subcategories/', views.get_subcategories, name='get_subcategories'),
     path('logout/', views.logout_view, name='logout'),
     path('int_chamado/<int:chamado_id>/', views.int_chamado, name='int_chamado'),
+    path('suport_chamado/<int:chamado_id>/', views.suport_chamado, name='suport_chamado'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

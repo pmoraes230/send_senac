@@ -54,6 +54,14 @@
         </div>
     </header>
 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+
     <div class="container page-content">
         <aside class="section_aside">
             <div class="left_aside">
@@ -79,14 +87,6 @@
                     </span>
                 </div>
             </div>
-
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
 
             <div class="page-header">
                 <h1 class="page-header-title">
@@ -154,6 +154,7 @@
             </div>
             <div class="inf_detalhes">
                 <h1 class="title_interacao">Tramitação</h1>
+                <h2>Tramitações:</h2>
                 {% for interacao in interacoes %}
                 <div class="camp_descricao">
                     <h1 class="inf_persona">{{ interacao.id_usuario.nome }}</h1>

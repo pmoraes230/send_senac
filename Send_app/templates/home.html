@@ -57,6 +57,14 @@
         <h4>Painel</h4>
     </div>
 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+
     <div class="conteiner page-content">
         <aside class="section_aside">
             <div class="left_aside">
@@ -150,60 +158,58 @@
                             </div>
                         </div>
                         
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th class="table-cell">Categoria/Sub</th>
-                                    <th class="table-cell">Usuário</th>
-                                    <th class="table-cell">Responsável</th>
-                                    <th class="table-cell">Solicitação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for chamado in chamados_abertos %}
-                                    <tr>
-                                        <td>{{ chamado.id }}</td>
-                                        <td>
-                                            <ul class="category-list">
-                                                {% for cat in chamado.chcategoriadochamado_set.all %}
-                                                    <li>{{ cat.id_categoria.nome }} / {{ cat.id_subcategoria.nome }}</li>
-                                                {% endfor %}
-                                                {% if not chamado.chcategoriadochamado_set.exists %}
-                                                    <li>Sem categoria/subcategoria</li>
-                                                {% endif %}
-                                            </ul>
-                                        </td>
-                                        <td>{{ chamado.id_usuario.nome }}</td>
-                                        <td>
-                                            {% if chamado.id_usuario_suporte %}
-                                                {{ chamado.id_usuario_suporte.nome }}
-                                            {% else %}
-                                                Não atribuído
+                        <div class="grid-container">
+                            <div class="grid-header">
+                                <div class="grid-item">#</div>
+                                <div class="grid-item">Categoria/Sub</div>
+                                <div class="grid-item">Usuário</div>
+                                <div class="grid-item">Responsável</div>
+                                <div class="grid-item">Solicitação</div>
+                            </div>
+                        
+                            {% for chamado in chamados_abertos %}
+                                <div class="grid-row">
+                                    <div class="grid-item">{{ chamado.id }}</div>
+                                    <div class="grid-item">
+                                        <ul class="category-list">
+                                            {% for cat in chamado.chcategoriadochamado_set.all %}
+                                                <li>{{ cat.id_categoria.nome }} / {{ cat.id_subcategoria.nome }}</li>
+                                            {% endfor %}
+                                            {% if not chamado.chcategoriadochamado_set.exists %}
+                                                <li>Sem categoria/subcategoria</li>
                                             {% endif %}
-                                        </td>
-                                        <td>{{ chamado.descricao|truncatewords:10 }}</td>
-                                        <td>
-                                            <td>
-                                                <a href="{% url 'int_chamado' chamado.id %}" class="icon_magnifying-glass">
-                                                    <img 
-                                                        src="{% static 'icons/magnifying-glass.svg' %}" 
-                                                        alt="magnifying-glass icon" 
-                                                        class="hover-icon" 
-                                                        onmouseover="this.src='{% static 'icons/magnifying-glass-white.svg' %}'" 
-                                                        onmouseout="this.src='{% static 'icons/magnifying-glass.svg' %}'" 
-                                                    />
-                                                </a>
-                                            </td>
-                                        </td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="5">Nenhum chamado em aberto encontrado.</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                        </ul>
+                                    </div>
+                                    <div class="grid-item">{{ chamado.id_usuario.nome }}</div>
+                                    <div class="grid-item">
+                                        {% if chamado.id_usuario_suporte %}
+                                            {{ chamado.id_usuario_suporte.nome }}
+                                        {% else %}
+                                            Não atribuído
+                                        {% endif %}
+                                    </div>
+                                    <div class="grid-item">
+                                        <div class="column_area">
+                                            <p class="status_style">{{ chamado.id_status }}</p>
+                                            <p>{{ chamado.descricao|truncatewords:10 }}</p>
+                                        </div>
+                                        <a href="{% url 'int_chamado' chamado.id %}" class="icon_magnifying-glass">
+                                            <img 
+                                                src="{% static 'icons/magnifying-glass.svg' %}" 
+                                                alt="magnifying-glass icon" 
+                                                class="hover-icon" 
+                                                onmouseover="this.src='{% static 'icons/magnifying-glass-white.svg' %}'" 
+                                                onmouseout="this.src='{% static 'icons/magnifying-glass.svg' %}'" 
+                                            />
+                                        </a>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="grid-row">
+                                    <div class="grid-item" colspan="5">Nenhum chamado em aberto encontrado.</div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

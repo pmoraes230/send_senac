@@ -14,6 +14,34 @@ body {
     width: 100%;
 }
 
+.seg_tramitacao {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5%;
+}
+
+.link_seg img {
+    width: 22px;
+    height: auto;
+}
+
+.link_seg {
+    display: flex;
+    align-items: center;
+    border: 3px solid #949494;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 50px;
+    color: #949494;
+}
+
+.link_seg:hover, .hover-icon:hover {
+    background-color: #1e65ab;
+    color: #FFF;
+    border: 3px solid #1e65ab;
+    transition: 0.3s;
+}
+
 .container_inf {
     display: flex;
     margin: 1rem 5rem;
@@ -24,7 +52,7 @@ body {
     display: flex;
     margin-top: 20px;
     justify-content: center;
-    gap: 21%;
+    gap: 4%;
 }
 
 .whapper_color_inf {
@@ -53,7 +81,7 @@ body {
 }
 
 .inf_chamado {
-    font-size: 15px;
+    font-size: 14px;
     margin-bottom: 10px;
 }
 
@@ -62,6 +90,15 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     font-size: 12px;
+}
+
+.status {
+    color: #000;
+    font-weight: 500;
+    word-wrap: break-word; /* Quebra palavras longas */
+    word-break: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Garante a quebra de palavras */
+    white-space: normal; /* Permite que o texto ocupe várias linhas */
 }
 
 .title_interacao {
@@ -77,12 +114,17 @@ body {
     padding: 1rem 1rem;
     border-radius: 5px;
     margin: 1rem 0;
-    max-width: 100%;
+    max-width: 1348px; /* Limite máximo de largura */
+    width: 100%; /* Ocupa 100% do espaço disponível */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
+    overflow: hidden; /* Impede que os filhos ultrapassem os limites */
 }
 
 .message {
     display: flex;
     gap: 1%;
+    max-width: 100%; /* Respeita o limite do elemento pai */
+    width: 100%;
 }
 
 .inf_persona {

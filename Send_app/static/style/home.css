@@ -22,6 +22,34 @@ img {
     width: auto;
 }
 
+.messages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+}
+
 .container_header {
     display: flex;
     background-color: #FFF;
@@ -29,6 +57,87 @@ img {
     border-bottom: 3px solid #f7941d;
 }
 
+/* Estilo para o contêiner do grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 2fr 3fr; /* Define as colunas */
+    gap: 10px; /* Espaçamento entre os itens */
+    width: 100%;
+    margin: 20px 0;
+    background-color: #ffffffc7;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para o cabeçalho do grid */
+.grid-header {
+    display: contents; /* Permite que os itens do cabeçalho sigam o layout do grid */
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+/* Estilo para as linhas do grid */
+.grid-row {
+    display: contents; /* Permite que os itens sigam o layout do grid */
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 0;
+}
+
+/* Estilo para os itens do grid */
+.grid-item {
+    padding: 10px;
+    font-size: 14px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para a lista de categorias/subcategorias */
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-list li {
+    margin-bottom: 5px; /* Espaçamento entre os itens */
+    font-size: 14px;
+    color: #333;
+}
+
+/* Estilo para o ícone de lupa */
+.icon_magnifying-glass img {
+    height: 20px;
+    width: auto;
+    border: 2px solid #1e65ab;
+    padding: 10px;
+    border-radius: 50px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.icon_magnifying-glass img:hover {
+    background-color: #1e65ab;
+    border-color: #fff;
+}
+
+.column_area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 20%;
+}
+
+.status_style {
+    background-color: #F7941D;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 50px;
+}
 
 .navbar {
     padding: .5rem 1rem;
