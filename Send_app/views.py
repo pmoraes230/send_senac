@@ -16,6 +16,7 @@ def custom_404(request, exception):
         return redirect('home')
     return redirect('login')
 
+# Função para obter o perfil do usuário logado
 def get_user_profile(request):
     """
     Retorna informações do perfil do usuário logado, se houver.
@@ -321,7 +322,7 @@ def int_chamado(request, chamado_id):
     
     return render(request, 'int_chamados.html', context)
 
-@role_required('A', 'B', 'C')  # Apenas usuários das categorias A, B e C podem acessar
+@role_required('A', 'B', 'C')
 def suport_chamado(request, chamado_id):
     context = get_user_profile(request)
 
@@ -335,30 +336,53 @@ def suport_chamado(request, chamado_id):
 
         # Define a hierarquia de permissões
         hierarquia = {
-            'A': ['A', 'B', 'C', 'Usuário Comum'],  # A pode acessar todos
-            'B': ['B', 'C', 'Usuário Comum'],       # B pode acessar B, C e Usuário Comum
-            'C': ['C', 'Usuário Comum'],            # C pode acessar C e Usuário Comum
+            'A': ['A', 'B', 'C'],  # A pode acessar todos
+            'B': ['B', 'C'],       # B pode acessar B, C e Usuário Comum
+            'C': ['C'],            # C pode acessar C e Usuário Comum
         }
 
         if chamado_role not in hierarquia.get(user_role, []):
             messages.error(request, 'Você não tem permissão para acessar este chamado.')
             return redirect('home')
 
-        # Lida com o envio de mensagens do suporte
+        # Lida com o envio de mensagens
         if request.method == 'POST':
             mensagem = request.POST.get('mensagem')
-            arquivo = request.FILES.get('arquivo')
+            arquivo = request.FILES.get('arquivo')  # Obtém o arquivo enviado
+            acao = request.POST.get('acao')  # Ação enviada pelo formulário (ex.: iniciar, responder, finalizar)
 
             if mensagem:
                 usuario = models.UsuUsuario.objects.get(id=context['user_id'])
 
-                # Cria uma nova interação como suporte
+                # Atualiza o status do chamado com base na ação
+                if acao == 'iniciar':
+                    chamado.id_status = models.ChStatus.objects.get_or_create(nome='Chamado em Análise')[0]
+                    chamado.id_usuario_suporte = usuario  # Define o técnico responsável
+                    chamado.save()
+                    messages.success(request, 'Atendimento iniciado com sucesso!')
+
+                elif acao == 'responder_suporte':
+                    chamado.id_status = models.ChStatus.objects.get_or_create(nome='Respondido pelo Suporte')[0]
+                    chamado.save()
+                    messages.success(request, 'Resposta enviada com sucesso!')
+
+                elif acao == 'responder_usuario':
+                    chamado.id_status = models.ChStatus.objects.get_or_create(nome='Respondido pelo Usuário')[0]
+                    chamado.save()
+                    messages.success(request, 'Resposta do usuário registrada com sucesso!')
+
+                elif acao == 'finalizar':
+                    chamado.id_status = models.ChStatus.objects.get_or_create(nome='Finalizado')[0]
+                    chamado.save()
+                    messages.success(request, 'Chamado finalizado com sucesso!')
+
+                # Cria uma nova interação
                 interacao = models.ChInteracao.objects.create(
                     id_usuario=usuario,
                     id_chamado=chamado,
                     id_status=chamado.id_status,
                     descricao=mensagem,
-                    suporte=1,  # Define que é uma mensagem do suporte
+                    suporte=1 if user_role in ['A', 'B', 'C'] else 0,  # Define se é uma mensagem do suporte ou do usuário
                     data_cadastro=timezone.now()
                 )
 
@@ -375,7 +399,6 @@ def suport_chamado(request, chamado_id):
                         data_cadastro=timezone.now()
                     )
 
-                messages.success(request, 'Resposta enviada com sucesso!')
                 return redirect('suport_chamado', chamado_id=chamado.id)
             else:
                 messages.error(request, 'A mensagem não pode estar vazia.')
@@ -388,16 +411,7 @@ def suport_chamado(request, chamado_id):
         # Busca os arquivos relacionados às interações do chamado
         arquivos = models.ChArquivo.objects.filter(
             id_interacao__id_chamado=chamado,
-            deletado=0
         )
-
-        # Filtra os chamados abertos com base na hierarquia
-        chamados_abertos = models.ChChamado.objects.filter(
-            deletado=0,
-            id_status__nome='Aberto',  # Certifique-se de que o status "Aberto" está correto
-            id_usuario__id_grupo_usuario__nome__in=hierarquia.get(user_role, [])
-        ).select_related('id_usuario', 'id_usuario_suporte', 'id_status')
-
 
         # Atualiza o contexto com o chamado, interações e arquivos
         context.update({
@@ -412,9 +426,11 @@ def suport_chamado(request, chamado_id):
             'tecnico_responsavel': chamado.id_usuario_suporte,  # Técnico responsável
             'cadastrado_por': chamado.id_usuario,  # Usuário que cadastrou o chamado
         })
-
     except models.ChChamado.DoesNotExist:
         messages.error(request, 'Chamado não encontrado.')
+        return redirect('home')
+    except Exception as e:
+        messages.error(request, f'Erro ao carregar o chamado: {str(e)}')
         return redirect('home')
 
     return render(request, 'suport_chamado.html', context)

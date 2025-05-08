@@ -97,68 +97,109 @@
         </aside>
 
         <div class="seg_tramitacao">
-            <a href="#" class="link_seg"><img src="{% static 'icons/eye.svg' %}" alt="magnifying-glass icon"
-                    class="hover-icon" onmouseover="this.src='{% static 'icons/eye-white.svg' %}'"
-                    onmouseout="this.src='{% static 'icons/eye.svg' %}'" />
+            <a href="#" class="link_seg"><img src="{% static 'icons/eye.svg' %}" alt="magnifying-glass icon" />
                 Seguir a tramitação</a>
         </div>
 
         <div class="container_inf">
-            <div class="whapper_color_inf">
-                <h1 class="title_inf">Sobre o Chamado</h1>
-                <div class="container_about_chamado">
-                    <div class="inf_left">
-                        <div class="inf_chamado">
-                            <h1 class="inf">Status:</h1>
-                            <p class="status">{{ status_chamada.nome }}</p>
-                        </div>
+            <div class="container_inf_chamado">
+                <div class="whapper_color_inf">
+                    <h1 class="title_inf">Sobre o Chamado</h1>
+                    <div class="container_about_chamado">
+                        <div class="inf_left">
+                            <div class="inf_chamado">
+                                <h1 class="inf">Status:</h1>
+                                <p class="status">{{ status_chamada.nome }}</p>
+                            </div>
 
-                        <div class="inf_chamado">
-                            <h1 class="inf">Categoria:</h1>
-                            {% for categoria in categorias %}
-                            <p class="status">{{ categoria.id_categoria.nome }} / {{ categoria.id_subcategoria.nome }}
-                            </p>
-                            {% empty %}
-                            <p class="status">Sem categoria/subcategoria</p>
-                            {% endfor %}
-                        </div>
+                            <div class="inf_chamado">
+                                <h1 class="inf">Categoria:</h1>
+                                {% for categoria in categorias %}
+                                <p class="status">{{ categoria.id_categoria.nome }} / {{
+                                    categoria.id_subcategoria.nome}}
+                                </p>
+                                {% empty %}
+                                <p class="status">Sem categoria/subcategoria</p>
+                                {% endfor %}
+                            </div>
 
-                        <div class="inf_chamado">
-                            <h1 class="inf">Solicitante:</h1>
-                            <p class="status">{{ solicitante.nome }}</p>
-                            <p class="status">{{ solicitante.id_setor.nome }}</p>
-                        </div>
+                            <div class="inf_chamado">
+                                <h1 class="inf">Solicitante:</h1>
+                                <p class="status">{{ solicitante.nome }}</p>
+                                <p class="status">{{ solicitante.id_setor.nome }}</p>
+                            </div>
 
-                        <div class="inf_chamado">
-                            <h1 class="inf">Patrimônio:</h1>
-                            <p class="status">{{ patrimonio }}</p>
+                            <div class="inf_chamado">
+                                <h1 class="inf">Patrimônio:</h1>
+                                <p class="status">{{ patrimonio }}</p>
+                            </div>
+                        </div>
+                        <div class="inf_right">
+                            <div class="inf_chamado">
+                                <h1 class="inf">Data de cadastro:</h1>
+                                <p class="status">{{ data_cadastro|date:"d/m/Y H:i" }}</p>
+                            </div>
+
+                            <div class="inf_chamado">
+                                <h1 class="inf">Técnico(a) Responsável:</h1>
+                                {% if tecnico_responsavel %}
+                                <p class="status">{{ tecnico_responsavel.nome }}</p>
+                                {% else %}
+                                <p class="status">Pendente</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="inf_chamado">
+                                <h1 class="inf">Cadastrado Por:</h1>
+                                <p class="status">{{ cadastrado_por.nome }}</p>
+                                <p class="status">{{ solicitante.id_setor.nome }}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="inf_right">
-                        <div class="inf_chamado">
-                            <h1 class="inf">Data de cadastro:</h1>
-                            <p class="status">{{ data_cadastro }}</p>
+                </div>
+
+                <div class="whapper_color_inf">
+                    <h1 class="title_inf">Opcões</h1>
+                    <a href="" class="notificacao_env">Enviar notificação</a>
+
+                    <div class="line_details"></div>
+
+                    <form action="#" method="POST" class="form_atualizar_catg">
+                        <div class="container_opcao_catg">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_categoria" class="title_op">CATEGORIA:</label>
+                                    <select name="id_categoria" id="id_categoria"
+                                        data-subcategories-url="{% url 'get_subcategories' %}" class="select_category"
+                                        required>
+                                        <option value="" disabled selected>Selecione uma categoria</option>
+                                        {% for category in categories %}
+                                        <option value="{{category.id}}">{{category.nome}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_subcategoria" class="title_op">SUB-CATEGORIA:</label>
+                                    <select name="id_subcategoria" id="id_subcategoria" class="select_category"
+                                        required>
+                                        <option value="" disabled selected>Selecione uma subcategoria</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="inf_chamado">
-                            <h1 class="inf">Técnico(a) Responsável:</h1>
-                            <p class="status">{{ tecnico_responsavel.nome }}</p>
-                        </div>
-
-                        <div class="inf_chamado">
-                            <h1 class="inf">Cadastrado Por:</h1>
-                            <p class="status">{{ cadastrado_por.nome }}</p>
-                        </div>
-                    </div>
+                        <button type="submit" class="btn_op">Atualizar categoria</button>
+                    </form>
                 </div>
             </div>
             <div class="inf_detalhes">
                 <h1 class="title_interacao">Tramitação</h1>
-                <h2>Tramitações:</h2>
                 {% for interacao in interacoes %}
                 <div class="camp_descricao">
                     <h1 class="inf_persona">{{ interacao.id_usuario.nome }}</h1>
-                    <p class="data_envio">{{ interacao.data_cadastro|date:"d/m/Y H:i" }}</p>
+                    <p class="data_envio">Despachado em {{ interacao.data_cadastro|date:"d  F Y H:i" }}h</p>
                     <div class="message">
                         <img src="{% static 'icons/quotation-marks.svg' %}" alt="icon quotation-marks">
                         <p class="status">{{ interacao.descricao }}</p>
@@ -185,7 +226,7 @@
                 {% endfor %}
 
                 <div class="camp_descricao">
-                    <h1 class="inf_persona margin_botton">{{ solicitante.nome }}</h1>
+                    <h1 class="inf_persona margin_botton">ainda colocar</h1>
 
                     <form action="#" method="POST" class="input_mensagem">
                         {% csrf_token %}
@@ -220,6 +261,7 @@
     <script src="{% static 'scripts/font.js' %}"></script>
     <script src="{% static 'scripts/check.js' %}"></script>
     <script src="{% static 'scripts/check_click.js' %}"></script>
+
 </body>
 
 </html>
